@@ -25,8 +25,8 @@ export default function Sidebar({ user, navItems, className }: Props) {
   const [open, setOpen] = useState(false);
 
   const defaultUser = {
-    name: "Dr. Evelyn Reed",
-    role: "General Practitioner",
+    name: "Dr. Danushka Ranasinghe",
+    role: "Medical Officer",
     avatar: "/avatar.jpg", // Replace with actual path
   };
 
@@ -73,12 +73,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
         ].join(" ")}
       >
         {/* Header: Patient Management & Search */}
-        <div className="px-4 py-3 border-b border-neutral-300">
-          <h1 className="text-sm font-semibold text-neutral-700">
-            Patient Management & Search
-          </h1>
-        </div>
-
+        
         {/* User Profile */}
         <div className="px-4 py-5 border-b border-neutral-300">
           <div className="flex items-center gap-3">
