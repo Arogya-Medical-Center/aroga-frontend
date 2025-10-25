@@ -43,7 +43,7 @@ export default function TopNav({ user, className }: Props) {
             </svg>
           </div>
           <span className="text-lg font-semibold text-neutral-900">
-            Healthcare
+            Arogya Healthcare Center
           </span>
         </div>
 
