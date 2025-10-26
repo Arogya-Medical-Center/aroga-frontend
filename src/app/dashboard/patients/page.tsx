@@ -138,7 +138,26 @@ export default function PatientManagementPage() {
     
     const matchesDoctor = !filterDoctor || patient.doctor === filterDoctor;
     
-    return matchesSearch && matchesDoctor;
+    // Date range filter
+    let matchesDateRange = true;
+    if (filterDateRange) {
+      const today = new Date();
+      const visitDate = new Date(patient.lastVisit);
+      
+      if (filterDateRange === "today") {
+        matchesDateRange = visitDate.toDateString() === today.toDateString();
+      } else if (filterDateRange === "week") {
+        const weekAgo = new Date(today);
+        weekAgo.setDate(today.getDate() - 7);
+        matchesDateRange = visitDate >= weekAgo && visitDate <= today;
+      } else if (filterDateRange === "month") {
+        const monthAgo = new Date(today);
+        monthAgo.setMonth(today.getMonth() - 1);
+        matchesDateRange = visitDate >= monthAgo && visitDate <= today;
+      }
+    }
+    
+    return matchesSearch && matchesDoctor && matchesDateRange;
   });
 
   // Pagination
