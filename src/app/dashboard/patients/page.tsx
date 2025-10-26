@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 // Define TypeScript interfaces
 interface Patient {
@@ -12,6 +13,7 @@ interface Patient {
   primaryIllness: string;
   lastVisit: string;
   doctor: string;
+  height?: number; // in cm
 }
 
 interface Consultation {
@@ -22,49 +24,27 @@ interface Consultation {
   symptoms: string;
   prescription: string;
   notes: string;
+  testResults?: {
+    bloodSugar?: number;
+    bloodPressureSystolic?: number;
+    bloodPressureDiastolic?: number;
+    weight?: number;
+    bmi?: number;
+  };
 }
 
-// Mock data for patients
+// Mock data for patients - sorted by latest visit
 const mockPatients: Patient[] = [
   {
-    id: "P00123",
-    name: "John Doe",
-    age: 45,
-    gender: "Male",
-    contact: "(123) 456-7890",
-    primaryIllness: "Seasonal Flu",
-    lastVisit: "2025-10-20",
-    doctor: "Dr. Smith"
-  },
-  {
-    id: "P00124",
-    name: "Jane Smith",
-    age: 32,
+    id: "P00128",
+    name: "Sarah Williams",
+    age: 35,
     gender: "Female",
-    contact: "(123) 456-7891",
-    primaryIllness: "Migraine",
-    lastVisit: "2025-10-22",
-    doctor: "Dr. Reed"
-  },
-  {
-    id: "P00125",
-    name: "Robert Johnson",
-    age: 58,
-    gender: "Male",
-    contact: "(123) 456-7892",
-    primaryIllness: "Allergy Checkup",
-    lastVisit: "2025-10-23",
-    doctor: "Dr. Smith"
-  },
-  {
-    id: "P00126",
-    name: "Emily Williams",
-    age: 28,
-    gender: "Female",
-    contact: "(123) 456-7893",
-    primaryIllness: "Hypertension",
-    lastVisit: "2025-10-24",
-    doctor: "Dr. Reed"
+    contact: "(123) 456-7895",
+    primaryIllness: "Diabetes",
+    lastVisit: "2025-10-26",
+    doctor: "Dr. Danushka",
+    height: 165 // cm
   },
   {
     id: "P00127",
@@ -74,69 +54,146 @@ const mockPatients: Patient[] = [
     contact: "(123) 456-7894",
     primaryIllness: "Routine Physical",
     lastVisit: "2025-10-25",
-    doctor: "Dr. Smith"
+    doctor: "Dr. Danushka",
+    height: 175 // cm
   },
   {
-    id: "P00128",
-    name: "Sarah Williams",
-    age: 35,
+    id: "P00126",
+    name: "Emily Williams",
+    age: 28,
     gender: "Female",
-    contact: "(123) 456-7895",
-    primaryIllness: "Diabetes Checkup",
-    lastVisit: "2025-10-26",
-    doctor: "Dr. Danushka"
+    contact: "(123) 456-7893",
+    primaryIllness: "Hypertension",
+    lastVisit: "2025-10-24",
+    doctor: "Dr. Danushka",
+    height: 162 // cm
+  },
+  {
+    id: "P00125",
+    name: "Robert Johnson",
+    age: 58,
+    gender: "Male",
+    contact: "(123) 456-7892",
+    primaryIllness: "Allergy Checkup",
+    lastVisit: "2025-10-23",
+    doctor: "Dr. Danushka",
+    height: 178 // cm
+  },
+  {
+    id: "P00124",
+    name: "Jane Smith",
+    age: 32,
+    gender: "Female",
+    contact: "(123) 456-7891",
+    primaryIllness: "Migraine",
+    lastVisit: "2025-10-22",
+    doctor: "Dr. Danushka",
+    height: 168 // cm
+  },
+  {
+    id: "P00123",
+    name: "John Doe",
+    age: 45,
+    gender: "Male",
+    contact: "(123) 456-7890",
+    primaryIllness: "Seasonal Flu",
+    lastVisit: "2025-10-20",
+    doctor: "Dr. Danushka",
+    height: 172 // cm
   }
 ];
 
-// Mock consultation history
+// Mock consultation history with test results
 const mockConsultations: Consultation[] = [
   {
     id: "C001",
-    date: "2025-10-20",
-    doctor: "Dr. Smith",
-    diagnosis: "Acute Viral Rhinitis",
-    symptoms: "Runny nose, sore throat, mild fever",
-    prescription: "Paracetamol 500mg TDS, Cetirizine 10mg OD",
-    notes: "Patient advised rest and fluid intake. Follow-up in 1 week if symptoms persist."
+    date: "2025-10-26",
+    doctor: "Dr. Danushka",
+    diagnosis: "Type 2 Diabetes - Under Control",
+    symptoms: "Increased thirst, frequent urination",
+    prescription: "Metformin 500mg BD, Continue diet control",
+    notes: "Blood sugar levels improving. Continue current medication and diet plan.",
+    testResults: {
+      bloodSugar: 135,
+      weight: 72
+    }
   },
   {
     id: "C002",
-    date: "2025-09-15",
-    doctor: "Dr. Reed",
-    diagnosis: "Upper Respiratory Infection",
-    symptoms: "Cough, congestion, fatigue",
-    prescription: "Amoxicillin 500mg TDS x 7 days",
-    notes: "Complete full course of antibiotics."
+    date: "2025-09-26",
+    doctor: "Dr. Danushka",
+    diagnosis: "Type 2 Diabetes - Monitoring Required",
+    symptoms: "Fatigue, increased hunger",
+    prescription: "Metformin 500mg BD, Dietary modifications",
+    notes: "Slight increase in blood sugar. Advised strict diet control.",
+    testResults: {
+      bloodSugar: 165,
+      weight: 74
+    }
   },
   {
     id: "C003",
-    date: "2025-08-10",
-    doctor: "Dr. Smith",
-    diagnosis: "Annual Health Screening",
-    symptoms: "None - preventive care",
-    prescription: "Multivitamin supplements",
-    notes: "Blood pressure normal. All vitals within range."
+    date: "2025-08-26",
+    doctor: "Dr. Danushka",
+    diagnosis: "Type 2 Diabetes - Initial Diagnosis",
+    symptoms: "Increased thirst, fatigue, blurred vision",
+    prescription: "Metformin 500mg BD, Diet and exercise plan",
+    notes: "Newly diagnosed with Type 2 Diabetes. Started on medication.",
+    testResults: {
+      bloodSugar: 185,
+      weight: 75
+    }
+  },
+  {
+    id: "C004",
+    date: "2025-07-26",
+    doctor: "Dr. Danushka",
+    diagnosis: "Pre-diabetes Screening",
+    symptoms: "Routine checkup",
+    prescription: "Lifestyle modifications recommended",
+    notes: "Blood sugar levels elevated. Recommended diet changes.",
+    testResults: {
+      bloodSugar: 145,
+      weight: 76
+    }
   }
 ];
 
+// Function to calculate BMI
+const calculateBMI = (weight: number, heightInCm: number): number => {
+  const heightInMeters = heightInCm / 100;
+  const bmi = weight / (heightInMeters * heightInMeters);
+  return Math.round(bmi * 10) / 10; // Round to 1 decimal place
+};
+
+// Function to get BMI category and color
+const getBMICategory = (bmi: number): { category: string; color: string; bgColor: string } => {
+  if (bmi < 18.5) {
+    return { category: "Underweight", color: "text-blue-700", bgColor: "bg-blue-100" };
+  } else if (bmi >= 18.5 && bmi < 25) {
+    return { category: "Normal", color: "text-green-700", bgColor: "bg-green-100" };
+  } else if (bmi >= 25 && bmi < 30) {
+    return { category: "Overweight", color: "text-amber-700", bgColor: "bg-amber-100" };
+  } else {
+    return { category: "Obese", color: "text-red-700", bgColor: "bg-red-100" };
+  }
+};
+
 export default function PatientManagementPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterDoctor, setFilterDoctor] = useState("");
   const [filterDateRange, setFilterDateRange] = useState("");
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [showConsultationHistory, setShowConsultationHistory] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Filter patients based on search and filters
+  // Filter and sort patients
   const filteredPatients = mockPatients.filter((patient: Patient) => {
     const matchesSearch = 
       patient.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       patient.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       patient.contact.includes(searchQuery) ||
       patient.primaryIllness.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesDoctor = !filterDoctor || patient.doctor === filterDoctor;
     
     // Date range filter
     let matchesDateRange = true;
@@ -157,7 +214,10 @@ export default function PatientManagementPage() {
       }
     }
     
-    return matchesSearch && matchesDoctor && matchesDateRange;
+    return matchesSearch && matchesDateRange;
+  }).sort((a: Patient, b: Patient) => {
+    // Sort by latest visit date (most recent first)
+    return new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime();
   });
 
   // Pagination
@@ -167,7 +227,6 @@ export default function PatientManagementPage() {
 
   const handleClearFilters = () => {
     setSearchQuery("");
-    setFilterDoctor("");
     setFilterDateRange("");
     setCurrentPage(1);
   };
@@ -176,6 +235,22 @@ export default function PatientManagementPage() {
     setSelectedPatient(patient);
     setShowConsultationHistory(true);
   };
+
+  // Prepare chart data for diagnosis tracking
+  const chartData = mockConsultations
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .map(consultation => {
+      const weight = consultation.testResults?.weight || 0;
+      const height = selectedPatient?.height || 165; // Default height if not available
+      const calculatedBMI = weight > 0 && height > 0 ? calculateBMI(weight, height) : 0;
+      
+      return {
+        date: consultation.date,
+        bloodSugar: consultation.testResults?.bloodSugar || 0,
+        weight: weight,
+        bmi: calculatedBMI
+      };
+    });
 
   return (
     <div className="p-6 bg-neutral-50 min-h-screen">
@@ -191,33 +266,19 @@ export default function PatientManagementPage() {
                 
                 {/* Search Input */}
                 <div className="mb-4">
+                  <label className="block text-sm font-medium text-neutral-800 mb-2">Search</label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3">
                       <SearchIcon />
                     </div>
                     <input
                       type="text"
-                      placeholder="Search by Name..."
+                      placeholder="Name, Phone, Illness..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="w-full pl-10 pr-4 py-2 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900 placeholder:text-neutral-500"
                     />
                   </div>
-                </div>
-
-                {/* Filter by Doctor */}
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-neutral-800 mb-2">Filter by Doctor</label>
-                  <select
-                    value={filterDoctor}
-                    onChange={(e) => setFilterDoctor(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-800"
-                  >
-                    <option value="">All Doctors</option>
-                    <option value="Dr. Smith">Dr. Smith</option>
-                    <option value="Dr. Reed">Dr. Reed</option>
-                    <option value="Dr. Danushka">Dr. Danushka</option>
-                  </select>
                 </div>
 
                 {/* Filter by Date Range */}
@@ -241,10 +302,6 @@ export default function PatientManagementPage() {
                 >
                   Clear All
                 </button>
-
-                <button className="w-full py-2 text-sm font-medium text-white bg-green-500 hover:bg-green-600 rounded-lg transition-colors">
-                  Apply Filters
-                </button>
               </div>
             </div>
 
@@ -257,7 +314,9 @@ export default function PatientManagementPage() {
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-neutral-600 uppercase tracking-wider">Patient Name</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-neutral-600 uppercase tracking-wider">Patient ID</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-600 uppercase tracking-wider">Contact</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-neutral-600 uppercase tracking-wider">Primary Illness</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-neutral-600 uppercase tracking-wider">Last Visit</th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-neutral-600 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
@@ -266,13 +325,15 @@ export default function PatientManagementPage() {
                         <tr key={patient.id} className="hover:bg-neutral-50">
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-900">{patient.name}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">{patient.id}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">{patient.contact}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">{patient.primaryIllness}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">{patient.lastVisit}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm">
                             <button
                               onClick={() => handleViewConsultation(patient)}
                               className="text-green-600 hover:text-green-700 font-medium"
                             >
-                              View Consultation Summary
+                              View Details
                             </button>
                           </td>
                         </tr>
@@ -283,21 +344,21 @@ export default function PatientManagementPage() {
 
                 {/* Pagination */}
                 <div className="px-6 py-4 border-t border-neutral-200 flex items-center justify-between">
-                  <div className="text-sm text-neutral-600">
+                  <div className="text-sm text-neutral-700 font-medium">
                     Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredPatients.length)} of {filteredPatients.length} Entries
                   </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                       disabled={currentPage === 1}
-                      className="px-3 py-1 text-sm border border-neutral-300 rounded hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-4 py-2 text-sm font-medium border-2 border-neutral-400 rounded-lg hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed text-neutral-800 bg-white transition-colors"
                     >
                       Previous
                     </button>
                     <button
                       onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                       disabled={currentPage === totalPages}
-                      className="px-3 py-1 text-sm border border-neutral-300 rounded hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-4 py-2 text-sm font-medium border-2 border-neutral-400 rounded-lg hover:bg-neutral-100 disabled:opacity-40 disabled:cursor-not-allowed text-neutral-800 bg-white transition-colors"
                     >
                       Next
                     </button>
@@ -308,7 +369,7 @@ export default function PatientManagementPage() {
           </div>
         </>
       ) : (
-        /* Consultation History View */
+        /* Consultation History View with Charts */
         <div>
           <button
             onClick={() => setShowConsultationHistory(false)}
@@ -318,7 +379,7 @@ export default function PatientManagementPage() {
             Back to Patient List
           </button>
 
-          <div className="bg-white rounded-lg border border-neutral-200 p-6">
+          <div className="bg-white rounded-lg border border-neutral-200 p-6 mb-6">
             <div className="flex items-start justify-between mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-neutral-900">{selectedPatient?.name}</h2>
@@ -328,6 +389,9 @@ export default function PatientManagementPage() {
                   <p><span className="font-medium">Gender:</span> {selectedPatient?.gender}</p>
                   <p><span className="font-medium">Contact:</span> {selectedPatient?.contact}</p>
                   <p><span className="font-medium">Primary Illness:</span> {selectedPatient?.primaryIllness}</p>
+                  {selectedPatient?.height && (
+                    <p><span className="font-medium">Height:</span> {selectedPatient.height} cm</p>
+                  )}
                 </div>
               </div>
               <button className="text-green-600 hover:text-green-700 font-medium flex items-center gap-1">
@@ -335,49 +399,224 @@ export default function PatientManagementPage() {
                 Edit Profile
               </button>
             </div>
+          </div>
 
-            <div className="border-t border-neutral-200 pt-6">
-              <h3 className="text-lg font-semibold text-neutral-900 mb-4">Visit History & Consultation Summary</h3>
+          {/* Health Trends Charts */}
+          <div className="bg-white rounded-lg border border-neutral-200 p-6 mb-6">
+            <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+              Health Trends {selectedPatient?.primaryIllness === "Diabetes" ? "- Diabetes Monitoring" : "- BMI & Weight Tracking"}
+            </h3>
+            
+            {selectedPatient?.primaryIllness === "Diabetes" && (
+              <div className="mb-8">
+                <h4 className="text-md font-medium text-neutral-700 mb-3">Blood Sugar Levels (mg/dL)</h4>
+                <ResponsiveContainer width="100%" height={250}>
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
+                    <XAxis 
+                      dataKey="date" 
+                      tick={{ fill: '#374151', fontSize: 12 }}
+                      stroke="#6b7280"
+                    />
+                    <YAxis 
+                      domain={[100, 200]} 
+                      tick={{ fill: '#374151', fontSize: 12 }}
+                      stroke="#6b7280"
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        padding: '8px'
+                      }}
+                      labelStyle={{ color: '#111827', fontWeight: 600 }}
+                      itemStyle={{ color: '#374151' }}
+                    />
+                    <Legend 
+                      wrapperStyle={{ color: '#374151', fontSize: '14px' }}
+                      iconType="line"
+                    />
+                    <Line type="monotone" dataKey="bloodSugar" stroke="#16a34a" strokeWidth={3} name="Blood Sugar" dot={{ fill: '#16a34a', r: 4 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+                <div className="mt-2 text-xs text-neutral-600">
+                  <span className="inline-block w-3 h-3 bg-green-100 border border-green-500 mr-1"></span>
+                  Normal Range: 70-140 mg/dL (fasting)
+                </div>
+              </div>
+            )}
 
-              <div className="space-y-4">
-                {mockConsultations.map((consultation: Consultation) => (
-                  <div key={consultation.id} className="border border-neutral-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                    <div className="flex items-start justify-between mb-3">
-                      <div>
-                        <div className="flex items-center gap-3 mb-1">
-                          <span className="text-sm font-semibold text-neutral-900">{consultation.date}</span>
-                          <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">{consultation.doctor}</span>
-                        </div>
-                        <p className="text-sm text-neutral-600">Consultation ID: {consultation.id}</p>
-                      </div>
-                    </div>
+            {/* Weight and BMI Chart - For All Patients */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-md font-medium text-neutral-700 mb-3">Weight Tracking (kg)</h4>
+                <ResponsiveContainer width="100%" height={200}>
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
+                    <XAxis 
+                      dataKey="date" 
+                      tick={{ fill: '#374151', fontSize: 12 }}
+                      stroke="#6b7280"
+                    />
+                    <YAxis 
+                      domain={[65, 80]} 
+                      tick={{ fill: '#374151', fontSize: 12 }}
+                      stroke="#6b7280"
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        padding: '8px'
+                      }}
+                      labelStyle={{ color: '#111827', fontWeight: 600 }}
+                      itemStyle={{ color: '#374151' }}
+                    />
+                    <Legend 
+                      wrapperStyle={{ color: '#374151', fontSize: '14px' }}
+                      iconType="line"
+                    />
+                    <Line type="monotone" dataKey="weight" stroke="#1d4ed8" strokeWidth={3} name="Weight" dot={{ fill: '#1d4ed8', r: 4 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <p className="font-medium text-neutral-700 mb-1">Diagnosis:</p>
-                        <p className="text-neutral-600">{consultation.diagnosis}</p>
-                      </div>
-                      <div>
-                        <p className="font-medium text-neutral-700 mb-1">Symptoms:</p>
-                        <p className="text-neutral-600">{consultation.symptoms}</p>
-                      </div>
-                      <div className="md:col-span-2">
-                        <p className="font-medium text-neutral-700 mb-1">Prescription:</p>
-                        <p className="text-neutral-600">{consultation.prescription}</p>
-                      </div>
-                      <div className="md:col-span-2">
-                        <p className="font-medium text-neutral-700 mb-1">Doctor&apos;s Notes:</p>
-                        <p className="text-neutral-600">{consultation.notes}</p>
-                      </div>
-                    </div>
+              <div>
+                <h4 className="text-md font-medium text-neutral-700 mb-3">BMI Tracking</h4>
+                <ResponsiveContainer width="100%" height={200}>
+                  <LineChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
+                    <XAxis 
+                      dataKey="date" 
+                      tick={{ fill: '#374151', fontSize: 12 }}
+                      stroke="#6b7280"
+                    />
+                    <YAxis 
+                      domain={[20, 30]} 
+                      tick={{ fill: '#374151', fontSize: 12 }}
+                      stroke="#6b7280"
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #d1d5db',
+                        borderRadius: '6px',
+                        padding: '8px'
+                      }}
+                      labelStyle={{ color: '#111827', fontWeight: 600 }}
+                      itemStyle={{ color: '#374151' }}
+                    />
+                    <Legend 
+                      wrapperStyle={{ color: '#374151', fontSize: '14px' }}
+                      iconType="line"
+                    />
+                    <Line type="monotone" dataKey="bmi" stroke="#d97706" strokeWidth={3} name="BMI" dot={{ fill: '#d97706', r: 4 }} />
+                  </LineChart>
+                </ResponsiveContainer>
+                <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                  <div className="flex items-center gap-1">
+                    <span className="w-3 h-3 bg-blue-500 rounded-sm"></span>
+                    <span className="text-neutral-900 font-medium">Underweight: &lt;18.5</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="w-3 h-3 bg-green-500 rounded-sm"></span>
+                    <span className="text-neutral-900 font-medium">Normal: 18.5-24.9</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="w-3 h-3 bg-amber-500 rounded-sm"></span>
+                    <span className="text-neutral-900 font-medium">Overweight: 25-29.9</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="w-3 h-3 bg-red-500 rounded-sm"></span>
+                    <span className="text-neutral-900 font-medium">Obese: ≥30</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                    <div className="mt-4 pt-3 border-t border-neutral-200 flex gap-3">
-                      <button className="text-sm text-green-600 hover:text-green-700 font-medium">View Full Details</button>
-                      <button className="text-sm text-neutral-600 hover:text-neutral-700 font-medium">Download Report</button>
+          {/* Visit History */}
+          <div className="bg-white rounded-lg border border-neutral-200 p-6">
+            <h3 className="text-lg font-semibold text-neutral-900 mb-4">Visit History & Consultation Summary</h3>
+
+            <div className="space-y-4">
+              {mockConsultations.map((consultation: Consultation) => (
+                <div key={consultation.id} className="border border-neutral-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <div className="flex items-center gap-3 mb-1">
+                        <span className="text-sm font-semibold text-neutral-900">{consultation.date}</span>
+                        <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded-full">{consultation.doctor}</span>
+                      </div>
+                      <p className="text-sm text-neutral-600">Consultation ID: {consultation.id}</p>
                     </div>
                   </div>
-                ))}
-              </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-4">
+                    <div>
+                      <p className="font-medium text-neutral-700 mb-1">Diagnosis:</p>
+                      <p className="text-neutral-600">{consultation.diagnosis}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-neutral-700 mb-1">Symptoms:</p>
+                      <p className="text-neutral-600">{consultation.symptoms}</p>
+                    </div>
+                    <div className="md:col-span-2">
+                      <p className="font-medium text-neutral-700 mb-1">Prescription:</p>
+                      <p className="text-neutral-600">{consultation.prescription}</p>
+                    </div>
+                    <div className="md:col-span-2">
+                      <p className="font-medium text-neutral-700 mb-1">Doctor&apos;s Notes:</p>
+                      <p className="text-neutral-600">{consultation.notes}</p>
+                    </div>
+                  </div>
+
+                  {/* Test Results */}
+                  {consultation.testResults && (
+                    <div className="border-t border-neutral-200 pt-3 mt-3">
+                      <p className="font-medium text-neutral-700 mb-2 text-sm">Test Results:</p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {consultation.testResults.bloodSugar && (
+                          <div className="bg-green-50 rounded p-2">
+                            <p className="text-xs text-neutral-600">Blood Sugar</p>
+                            <p className="text-lg font-semibold text-green-700">{consultation.testResults.bloodSugar} mg/dL</p>
+                          </div>
+                        )}
+                        {consultation.testResults.weight && (
+                          <div className="bg-blue-50 rounded p-2">
+                            <p className="text-xs text-neutral-600">Weight</p>
+                            <p className="text-lg font-semibold text-blue-700">{consultation.testResults.weight} kg</p>
+                          </div>
+                        )}
+                        {consultation.testResults.weight && selectedPatient?.height && (
+                          <div className="bg-amber-50 rounded p-2">
+                            <p className="text-xs text-neutral-600">BMI (Calculated)</p>
+                            <p className="text-lg font-semibold text-amber-700">
+                              {calculateBMI(consultation.testResults.weight, selectedPatient.height)}
+                            </p>
+                            {(() => {
+                              const bmi = calculateBMI(consultation.testResults.weight, selectedPatient.height);
+                              const bmiInfo = getBMICategory(bmi);
+                              return (
+                                <span className={`inline-block mt-1 px-2 py-0.5 text-xs font-medium rounded ${bmiInfo.bgColor} ${bmiInfo.color}`}>
+                                  {bmiInfo.category}
+                                </span>
+                              );
+                            })()}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="mt-4 pt-3 border-t border-neutral-200 flex gap-3">
+                    <button className="text-sm text-green-600 hover:text-green-700 font-medium">View Full Details</button>
+                    <button className="text-sm text-neutral-600 hover:text-neutral-700 font-medium">Download Report</button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
