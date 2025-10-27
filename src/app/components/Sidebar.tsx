@@ -44,6 +44,18 @@ export default function Sidebar({ user, navItems, className }: Props) {
       href: "/dashboard/patients",
       active: true,
     },
+    {
+    id: "registration",
+    label: "Patient Registration",
+    icon: <PatientsIcon />,
+    href: "/patient-registration",
+  },
+  {
+    id: "profile",
+    label: "Patient Profile",
+    icon: <DashboardIcon />,
+    href: "/patient-profile",
+  },
   ];
 
   const currentUser = user || defaultUser;
