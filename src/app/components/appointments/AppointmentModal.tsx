@@ -59,7 +59,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
           <div className="p-6 border-b border-[var(--border-color)]">
             <div className="flex items-center justify-between">
               <h2>{appointment ? 'Edit Appointment' : 'New Appointment'}</h2>
-              <button onClick={onClose} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
+              <button onClick={onClose} className="text-black hover:text-black">
                 <div className="icon-x text-xl"></div>
               </button>
             </div>
@@ -164,16 +164,16 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="input-field"
-                  rows="3"
+                  className="input-field6"
+                  rows={3}
                   placeholder="Add any additional notes..."
                 ></textarea>
               </div>
             </div>
             
             <div className="flex gap-3 mt-6 justify-end">
-              <button type="button" onClick={onClose} className="btn btn-secondary text-black">Cancel</button>
-              <button type="submit" className="btn btn-primary text-black">Save Appointment</button>
+              <button type="button" onClick={onClose} className="btn btn-secondary w-xs rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-medium text-sm py-2.5 transition-colors">Cancel</button>
+              <button type="submit" className="btn btn-primary w-xs rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium text-sm py-2.5 transition-colors">Save Appointment</button>
             </div>
           </form>
         </div>

@@ -22,7 +22,7 @@ export default function DashboardAppointments() {
 
   return (
     <ErrorBoundary>
-      <section className="mt-8 bg-white border rounded p-4" data-name="dashboard-appointments">
+      <section className="mt-8 bg-white border rounded p-4 text-black" data-name="dashboard-appointments">
         <Header onAddNew={() => { setSelectedAppointment(null); setShowModal(true); }} />
 
         <main className="max-w-7xl mx-auto px-0 py-4">

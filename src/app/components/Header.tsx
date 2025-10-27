@@ -7,18 +7,18 @@ function Header({ onAddNew }: { onAddNew: () => void }) {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-[var(--primary-color)] flex items-center justify-center">
+              {/*<div className="w-10 h-10 rounded-lg bg-[var(--primary-color)] flex items-center justify-center">
                 <div className="icon-calendar-check text-xl text-white"></div>
               </div>
-              <h1 className="text-2xl font-bold">Appointments</h1>
+              {/*<h1 className="text-2xl font-bold">Appointments</h1>*/}
             </div>
-            <button onClick={onAddNew} className="btn btn-primary flex items-center gap-2">
+            {/*<button onClick={onAddNew} className="btn btn-primary flex items-center gap-2">
               <div className="icon-plus text-base"></div>
               <span>New Appointment</span>
-            </button>
+            </button>*/}
           </div>
           
-          <div className="flex gap-4">
+          {/*<div className="flex gap-4">
             <Link href="/" passHref>
               <button
                 className={`px-4 py-2 font-medium border-b-2 transition-colors ${
@@ -41,7 +41,7 @@ function Header({ onAddNew }: { onAddNew: () => void }) {
                 Calendar
               </button>
             </Link>
-          </div>
+          </div>*/}
         </div>
       </header>
     );

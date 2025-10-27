@@ -10,7 +10,7 @@ export default function Home() {
       </p>
 
   {/* Appointments section below the dashboard content */}
-  <DashboardAppointments />
+
       
     </div>
   );

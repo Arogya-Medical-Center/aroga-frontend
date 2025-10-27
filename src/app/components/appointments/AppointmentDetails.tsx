@@ -1,18 +1,145 @@
-import React from 'react';
+'use client';
 
-export default function AppointmentDetails({ appointment, onClose, onEdit, onDelete }: any) {
-  if (!appointment) return null;
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/20">
-      <div className="bg-white p-4 rounded shadow max-w-md w-full">
-        <h2 className="font-bold mb-2">Appointment Details (placeholder)</h2>
-        <div className="mb-4">Patient: {appointment.patientName}</div>
-        <div className="flex justify-end gap-2">
-          <button className="btn" onClick={onClose}>Close</button>
-          <button className="btn" onClick={() => onEdit && onEdit(appointment)}>Edit</button>
-          <button className="btn btn-danger" onClick={() => onDelete && onDelete(appointment.id)}>Delete</button>
+import StatusBadge from './StateBadge';
+
+interface AppointmentDetailsProps {
+  appointment: {
+    id: string;
+    patientName: string;
+    doctorName: string;
+    date: string;
+    time: string;
+    duration: string;
+    type: string;
+    status: string;
+    notes?: string;
+  };
+  onClose: () => void;
+  onEdit: () => void;
+  onDelete: (id: string) => void;
+}
+
+function AppointmentDetails({ appointment, onClose, onEdit, onDelete }: AppointmentDetailsProps) {
+  try {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" data-name="appointment-details" data-file="components/AppointmentDetails.js">
+        <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+         {/*<div className="p-6 border-b border-[var(--border-color)]">
+            <div className="flex items-center justify-between">
+              
+              <button onClick={onClose} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
+                <div className="icon-x text-xl"></div>
+              </button>
+            </div>
+          </div>*/}
+            <div className="p-6 border-b border-[var(--border-color)]">
+              <div className="flex items-center justify-between">
+                <h2 className="text-black text-lg font-semibold">Appointment Details</h2>
+                <button onClick={onClose} className="text-black hover:text-black">
+                  <div className="icon-x text-xl"></div>
+                </button>
+              </div>
+            </div>
+          
+          <div className="p-6">
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-sm font-medium text-[var(--text-secondary)] mb-3">Patient Information</h3>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-full bg-[var(--primary-color)] bg-opacity-10 flex items-center justify-center">
+                      <div className="icon-user text-lg text-[var(--primary-color)]"></div>
+                    </div>
+                    <div>
+                      <div className="font-semibold">{appointment.patientName}</div>
+                        <div className="text-sm text-black">Patient ID: #{appointment.id.slice(0, 8)}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                  <h3 className="text-sm font-medium text-black mb-3">Appointment Details</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="icon-stethoscope text-lg text-[var(--primary-color)]"></div>
+                    <div>
+                      <div className="text-xs text-[var(--text-secondary)]">Doctor</div>
+                        <div className="text-black font-medium">Dr. {appointment.doctorName}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="icon-calendar text-lg text-[var(--primary-color)]"></div>
+                    <div>
+                      <div className="text-xs text-[var(--text-secondary)]">Date</div>
+                        <div className="text-black font-medium">{appointment.date}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="icon-clock text-lg text-[var(--primary-color)]"></div>
+                    <div>
+                      <div className="text-xs text-[var(--text-secondary)]">Time</div>
+                        <div className="text-black font-medium">{appointment.time}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="icon-timer text-lg text-[var(--primary-color)]"></div>
+                    <div>
+                      <div className=" text-xs text-[var(--text-secondary)]">Duration</div>
+                        <div className="text-xs text-black">Duration</div>
+                        <div className="text-black font-medium">{appointment.duration} min</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="icon-file-text text-lg text-[var(--primary-color)]"></div>
+                    <div>
+                      <div className="text-xs text-[var(--text-secondary)]">Type</div>
+                        <div className="text-black font-medium">{appointment.type}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="icon-activity text-lg text-[var(--primary-color)]"></div>
+                    <div>
+                      <div className="text-xs text-[var(--text-secondary)]">Status</div>
+                      <div className="font-medium"><StatusBadge status={appointment.status as any} /></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {appointment.notes && (
+                <div>
+                    <h3 className="text-sm font-medium text-black mb-3">Notes</h3>
+                    <div className="bg-gray-50 p-4 rounded-lg text-sm text-black">
+                    {appointment.notes}
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex gap-3 mt-6 pt-6 border-t border-[var(--border-color)]">
+              <button onClick={onEdit} className="btn btn-primary flex-1 flex items-center justify-center gap-2 w-4 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium text-sm py-2.5 transition-colors">
+                <div className="icon-pencil text-base "></div>
+                Edit Appointment
+              </button>
+              <button onClick={() => onDelete(appointment.id)} className="btn btn-danger flex-1 flex items-center justify-center gap-2 w-xs rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium text-sm py-2.5 transition-colors">
+                <div className="icon-trash-2 text-base "></div>
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  } catch (error) {
+    console.error('AppointmentDetails component error:', error);
+    return null;
+  }
 }
+
+export default AppointmentDetails;

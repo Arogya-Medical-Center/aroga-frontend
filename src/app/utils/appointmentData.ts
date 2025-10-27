@@ -15,7 +15,8 @@ export function getInitialAppointments() {
       duration: '30',
       type: 'Check-up',
       status: 'scheduled',
-      notes: 'Regular health checkup'
+      notes: 'Regular health checkup',
+    
     },
     {
       id: '2',

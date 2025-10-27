@@ -1,100 +1,142 @@
-"use client";
+'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
+
+interface Appointment {
+  id: string | number;
+  patientName: string;
+  date: string; // YYYY-MM-DD
+  time: string;
+  status: 'scheduled' | 'pending' | 'completed' | 'cancelled' | string;
+}
 
 interface CalendarViewProps {
-  appointments: any[]; // Adjust to a specific Appointment type if defined
-  onAppointmentClick: (appointment: any) => void; // Adjust to a specific Appointment type if defined
+  appointments: Appointment[];
+  onAppointmentClick: (appointment: Appointment) => void;
 }
 
-function CalendarView({ appointments, onAppointmentClick }: CalendarViewProps) {
-  try {
-    const [currentWeekStart, setCurrentWeekStart] = useState(() => {
-      const today = new Date('2025-10-26T17:43:00+05:30'); // Set to current date and time
-      const day = today.getDay();
-      const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Start of the week (Sunday)
-      return new Date(today.setDate(diff));
-    });
+export default function CalendarView({
+  appointments,
+  onAppointmentClick,
+}: CalendarViewProps) {
+  const [currentWeekStart, setCurrentWeekStart] = useState(() => {
+    const today = new Date();
+    const day = today.getDay();
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Monday as start
+    const monday = new Date(today);
+    monday.setDate(diff);
+    monday.setHours(0, 0, 0, 0);
+    return monday;
+  });
 
-    const weekDays = Array.from({ length: 7 }, (_, i) => {
-      const date = new Date(currentWeekStart);
-      date.setDate(currentWeekStart.getDate() + i);
-      return date;
-    });
+  const weekDays = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(currentWeekStart);
+    date.setDate(currentWeekStart.getDate() + i);
+    return date;
+  });
 
-    const goToPreviousWeek = () => {
-      const newDate = new Date(currentWeekStart);
-      newDate.setDate(newDate.getDate() - 7);
-      setCurrentWeekStart(newDate);
-    };
+  const goToPreviousWeek = () => {
+    const newDate = new Date(currentWeekStart);
+    newDate.setDate(newDate.getDate() - 7);
+    setCurrentWeekStart(newDate);
+  };
 
-    const goToNextWeek = () => {
-      const newDate = new Date(currentWeekStart);
-      newDate.setDate(newDate.getDate() + 7);
-      setCurrentWeekStart(newDate);
-    };
+  const goToNextWeek = () => {
+    const newDate = new Date(currentWeekStart);
+    newDate.setDate(newDate.getDate() + 7);
+    setCurrentWeekStart(newDate);
+  };
 
-    return (
-      <div className="card" data-name="calendar-view" data-file="src/components/CalendarView.tsx">
-        <div className="flex items-center justify-between mb-6">
-          <h2>Weekly Schedule</h2>
-          <div className="flex items-center gap-4">
-            <button onClick={goToPreviousWeek} className="btn btn-secondary">
-              <div className="icon-chevron-left text-base"></div>
-            </button>
-            <span className="font-medium">
-              {weekDays[0].toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} - {weekDays[6].toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-            </span>
-            <button onClick={goToNextWeek} className="btn btn-secondary">
-              <div className="icon-chevron-right text-base"></div>
-            </button>
-          </div>
-        </div>
+  const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
-        <div className="grid grid-cols-7 gap-2">
-          {weekDays.map((day, index) => {
-            const dateStr = day.toISOString().split('T')[0];
-            const dayAppointments = appointments.filter(apt => apt.date === dateStr);
-            const isToday = dateStr === new Date('2025-10-26').toISOString().split('T')[0]; // Current date
+  return (
+    <div className="p-6 bg-white shadow-md rounded-xl" data-name="calendar-view">
+      {/* Header with navigation */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">Weekly Schedule</h2>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
+              e.preventDefault();
+              goToPreviousWeek();
+            }}
+            className="px-3 py-1 border rounded-md hover:bg-gray-100"
+          >
+            ◀
+          </button>
 
-            return (
-              <div key={index} className={`border border-[var(--border-color)] rounded-lg p-3 min-h-[200px] ${isToday ? 'bg-blue-50 border-[var(--primary-color)]' : 'bg-white'}`}>
-                <div className={`text-center mb-3 pb-2 border-b ${isToday ? 'border-[var(--primary-color)]' : 'border-[var(--border-color)]'}`}>
-                  <div className="text-xs font-medium text-[var(--text-secondary)]">
-                    {day.toLocaleDateString('en-US', { weekday: 'short' })}
-                  </div>
-                  <div className={`text-lg font-bold ${isToday ? 'text-[var(--primary-color)]' : ''}`}>
-                    {day.getDate()}
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  {dayAppointments.map(apt => (
-                    <div
-                      key={apt.id}
-                      onClick={() => onAppointmentClick(apt)}
-                      className={`p-2 rounded cursor-pointer text-xs ${
-                        apt.status === 'scheduled' ? 'bg-green-100 hover:bg-green-200' :
-                        apt.status === 'pending' ? 'bg-yellow-100 hover:bg-yellow-200' :
-                        apt.status === 'completed' ? 'bg-blue-100 hover:bg-blue-200' :
-                        'bg-gray-100 hover:bg-gray-200'
-                      }`}
-                    >
-                      <div className="font-medium truncate">{apt.patientName}</div>
-                      <div className="text-[var(--text-secondary)] mt-1">{apt.time}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+          <span className="font-medium text-gray-700">
+            {weekDays[0].toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}{' '}-{' '}
+            {weekDays[6].toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          </span>
+
+          <button
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
+              e.preventDefault();
+              goToNextWeek();
+            }}
+            className="px-3 py-1 border rounded-md hover:bg-gray-100"
+          >
+            ▶
+          </button>
         </div>
       </div>
-    );
-  } catch (error) {
-    console.error('CalendarView component error:', error);
-    return null;
-  }
-}
 
-export default CalendarView;
+      {/* Week grid */}
+      <div className="grid grid-cols-7 gap-3">
+        {weekDays.map((day, index) => {
+          const dateStr = formatDate(day);
+          const dayAppointments = appointments.filter((apt) => apt.date === dateStr);
+          const isToday = dateStr === formatDate(new Date());
+
+          return (
+            <div
+              key={index}
+              className={`border rounded-lg p-3 min-h-[180px] transition ${
+                isToday ? 'bg-blue-50 border-blue-400' : 'bg-white border-gray-200'
+              }`}
+            >
+              {/* Date header */}
+              <div className={`text-center mb-3 pb-2 border-b ${isToday ? 'border-blue-400' : 'border-gray-200'}`}>
+                <div className="text-xs text-gray-500">{day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                <div className={`text-lg font-bold ${isToday ? 'text-blue-600' : 'text-gray-800'}`}>{day.getDate()}</div>
+              </div>
+
+              {/* Appointments */}
+              <div className="space-y-2">
+                {dayAppointments.length > 0 ? (
+                  dayAppointments.map((apt) => (
+                    <div
+                      key={apt.id}
+                      onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        onAppointmentClick(apt);
+                      }}
+                      className={`p-2 rounded-md cursor-pointer text-xs ${
+                        apt.status === 'scheduled'
+                          ? 'bg-green-100 hover:bg-green-200'
+                          : apt.status === 'pending'
+                          ? 'bg-yellow-100 hover:bg-yellow-200'
+                          : apt.status === 'completed'
+                          ? 'bg-blue-100 hover:bg-blue-200'
+                          : 'bg-gray-100 hover:bg-gray-200'
+                      }`}
+                    >
+                      <div className="font-medium truncate text-black">{apt.patientName}</div>
+                      <div className="text-gray-600 mt-1">{apt.time}</div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-gray-400 text-center">No Appointments</p>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
