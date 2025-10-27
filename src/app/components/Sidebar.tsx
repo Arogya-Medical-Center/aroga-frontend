@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 type NavItem = {
   id: string;
@@ -50,10 +52,23 @@ export default function Sidebar({ user, navItems, className }: Props) {
       icon: <PillIcon />,
       href: "/dashboard/drug-inventory",
     }
+      id: "appointments-dashboard",
+      label: "Appointments",
+      icon: <PatientsIcon />,
+      href: "/appointments",
+    },
+    {
+      id: "appointments-calendar",
+      label: "Calendar",
+      icon: <PatientsIcon />,
+      href: "/calendar",
+    },
   ];
 
   const currentUser = user || defaultUser;
   const nav = navItems || defaultNavItems;
+
+  const pathname = usePathname();
 
   return (
     <>
@@ -111,22 +126,23 @@ export default function Sidebar({ user, navItems, className }: Props) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4 px-2">
           <ul className="space-y-1">
-            {nav.map((item) => (
-              <li key={item.id}>
-                <a
-                  href={item.href}
-                  className={[
-                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                    item.active
-                      ? "bg-green-100 text-green-800"
-                      : "text-neutral-700 hover:bg-neutral-100",
-                  ].join(" ")}
-                >
-                  {item.icon}
-                  <span>{item.label}</span>
-                </a>
-              </li>
-            ))}
+            {nav.map((item) => {
+              const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href));
+              return (
+                <li key={item.id}>
+                  <a
+                    href={item.href}
+                    className={[
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                      isActive ? "bg-green-100 text-green-800" : "text-neutral-700 hover:bg-neutral-100",
+                    ].join(" ")}
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
