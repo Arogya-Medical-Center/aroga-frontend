@@ -38,7 +38,16 @@ export default function DrugTable({ items, onEdit, onDelete }: Props) {
                 <td className="px-4 py-3 text-sm font-medium text-neutral-900">{item.name}</td>
                 <td className="px-4 py-3 text-sm text-neutral-700">{item.category}</td>
                 <td className="px-4 py-3 text-sm">
-                  <span className={"font-medium " + ( (item.reorderLevel ?? 0) > 0 && item.quantity <= (item.reorderLevel ?? 0) ? "text-red-600" : "text-neutral-900")}>{item.quantity}</span>
+                  <span
+                    className={
+                      "font-medium " +
+                      (((item.reorderLevel ?? 0) > 0 && item.quantity <= (item.reorderLevel ?? 0))
+                        ? "text-red-600"
+                        : "text-green-600")
+                    }
+                  >
+                    {item.quantity}
+                  </span>
                 </td>
                 <td className="px-4 py-3 text-sm text-neutral-700">{item.unit || 'pcs'}</td>
                 <td className="px-4 py-3 text-sm text-neutral-700">{item.reorderLevel ?? '-'}</td>
