@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import StatusBadge from './StateBadge';
 
 interface AppointmentDetailsProps {
@@ -21,9 +22,20 @@ interface AppointmentDetailsProps {
 
 function AppointmentDetails({ appointment, onClose, onEdit, onDelete }: AppointmentDetailsProps) {
   try {
+    useEffect(() => {
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', onKey);
+      return () => window.removeEventListener('keydown', onKey);
+    }, [onClose]);
+
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" data-name="appointment-details" data-file="components/AppointmentDetails.js">
-        <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div onClick={() => onClose()} className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-transparent backdrop-blur-sm" data-name="appointment-details" data-file="components/AppointmentDetails.js">
+        <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[var(--border-color)] relative">
+          <button onClick={onClose} aria-label="Close" className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+            <div className="icon-x text-xl"></div>
+          </button>
          {/*<div className="p-6 border-b border-[var(--border-color)]">
             <div className="flex items-center justify-between">
               

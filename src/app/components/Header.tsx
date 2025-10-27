@@ -13,7 +13,8 @@ function Header({ onAddNew }: { onAddNew: () => void }) {
               {/*<h1 className="text-2xl font-bold">Appointments</h1>*/}
             </div>
             {/*<button onClick={onAddNew} className="btn btn-primary flex items-center gap-2">
-              <div className="icon-plus text-base"></div>
+              <div className="icon-plu
+              s text-base"></div>
               <span>New Appointment</span>
             </button>*/}
           </div>

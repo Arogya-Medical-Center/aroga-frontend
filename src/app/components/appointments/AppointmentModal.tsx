@@ -18,7 +18,7 @@ export default function AppointmentModal({ appointment, onClose, onSave }: any) 
 
 //'use client'; // Marks this as a client component for state management
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface AppointmentModalProps {
   appointment: {
@@ -53,9 +53,20 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
       onSave(formData);
     };
 
+    useEffect(() => {
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') onClose();
+      };
+      window.addEventListener('keydown', onKey);
+      return () => window.removeEventListener('keydown', onKey);
+    }, [onClose]);
+
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" data-name="appointment-modal" data-file="src/components/AppointmentModal.tsx">
-        <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div onClick={() => onClose()} className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-transparent backdrop-blur-sm" data-name="appointment-modal" data-file="src/components/AppointmentModal.tsx">
+        <div onClick={(e) => e.stopPropagation()} className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[var(--border-color)] relative">
+          <button onClick={onClose} aria-label="Close" className="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+            <div className="icon-x text-xl"></div>
+          </button>
           <div className="p-6 border-b border-[var(--border-color)]">
             <div className="flex items-center justify-between">
               <h2>{appointment ? 'Edit Appointment' : 'New Appointment'}</h2>
@@ -74,7 +85,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                   required
                   value={formData.patientName}
                   onChange={(e) => setFormData({ ...formData, patientName: e.target.value })}
-                  className="input-field"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
                   placeholder="Enter patient name"
                  
                 />
@@ -86,7 +97,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                   required
                   value={formData.doctorName}
                   onChange={(e) => setFormData({ ...formData, doctorName: e.target.value })}
-                  className="input-field"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
                 >
                   <option value="" className="text-black">Select doctor</option>
                   <option value="Smith" className="text-black">Dr. Smith</option>
@@ -103,7 +114,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                   required
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className="input-field"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
                 />
               </div>
               
@@ -114,7 +125,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                   required
                   value={formData.time}
                   onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                  className="input-field"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
                 />
               </div>
               
@@ -124,7 +135,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                   type="number"
                   value={formData.duration}
                   onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                  className="input-field"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
                   min="15"
                   step="15"
                 />
@@ -135,7 +146,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="input-field"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
                 >
                   <option value="Check-up">Check-up</option>
                   <option value="Follow-up">Follow-up</option>
@@ -149,7 +160,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                 <select
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                  className="input-field"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
                 >
                   <option value="scheduled">Scheduled</option>
                   <option value="pending">Pending</option>
@@ -164,7 +175,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="input-field6"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
                   rows={3}
                   placeholder="Add any additional notes..."
                 ></textarea>
