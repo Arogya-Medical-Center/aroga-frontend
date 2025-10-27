@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 type NavItem = {
   id: string;
@@ -43,6 +44,12 @@ export default function Sidebar({ user, navItems, className }: Props) {
       icon: <PatientsIcon />,
       href: "/dashboard/patients",
       active: true,
+    },
+    {
+      id: "bmi-calculator",
+      label: "BMI Calculator",
+      icon: <BMICalculatorIcon />,
+      href: "/BMICalculator",
     },
   ];
 
@@ -107,8 +114,9 @@ export default function Sidebar({ user, navItems, className }: Props) {
           <ul className="space-y-1">
             {nav.map((item) => (
               <li key={item.id}>
-                <a
+                <Link
                   href={item.href}
+                  onClick={() => setOpen(false)}
                   className={[
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                     item.active
@@ -118,7 +126,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
                 >
                   {item.icon}
                   <span>{item.label}</span>
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -209,6 +217,29 @@ function LogOutIcon() {
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
       <polyline points="16 17 21 12 16 7" />
       <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  );
+}
+
+function BMICalculatorIcon() {
+  return (
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="4" y="2" width="16" height="20" rx="2" />
+      <rect x="7" y="5" width="10" height="4" rx="1" />
+      <rect x="7" y="11" width="3" height="3" rx="0.5" />
+      <rect x="11" y="11" width="3" height="3" rx="0.5" />
+      <rect x="15" y="11" width="3" height="3" rx="0.5" />
+      <rect x="7" y="16" width="3" height="3" rx="0.5" />
+      <rect x="11" y="16" width="3" height="3" rx="0.5" />
+      <rect x="15" y="16" width="3" height="3" rx="0.5" />
     </svg>
   );
 }
