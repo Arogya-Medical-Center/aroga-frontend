@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --brand: #3E7FA6;
+  --brand-hover: #356882;
 }
 
 @theme inline {
@@ -25,6 +27,29 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Brand color utilities */
+.bg-brand {
+  background-color: var(--brand);
+}
+
+.bg-brand-hover:hover {
+  background-color: var(--brand-hover);
+}
+
+.text-brand {
+  color: var(--brand);
+}
+
+.border-brand {
+  border-color: var(--brand);
+}
+
+.focus\:ring-brand:focus {
+  --tw-ring-color: var(--brand);
+}
+
+.hover\:text-brand-hover:hover {
+  color: var(--brand-hover);
 /* Make calendar & appointment UI text black only inside these components */
 [data-name="calendar-view"],
 [data-name="calendar"],
