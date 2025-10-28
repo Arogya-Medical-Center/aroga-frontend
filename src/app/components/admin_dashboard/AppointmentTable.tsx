@@ -28,34 +28,39 @@ export default function AppointmentTable() {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 shadow-sm">
-      <h3 className="font-medium text-gray-700 mb-3">Upcoming Appointments</h3>
-  <table className="w-full text-sm">
-        <thead className="text-gray-50 ">
-          <tr>
-            <th className="text-left py-4">Patient Name</th>
-            <th className="text-left py-4">Doctor</th>
-            <th className="text-left py-4">Time</th>
-            <th className="text-left py-4">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {appointments.map((a, idx) => (
-            <tr key={idx} className=" border-gray-200 hover:bg-gray-50 ">
-              <td className="py-5">{a.name}</td>
-              <td className="py-4">{a.doctor}</td>
-              <td className="py-4">{a.time}</td>
-              <td className="py-4">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs ${getBadgeColor(a.status)}`}
-                >
-                  {a.status}
-                </span>
-              </td>
+    <div className="bg-white rounded-2xl p-5 shadow-md">
+      <h3 className="font-semibold text-gray-800 mb-4 text-lg">Upcoming Appointments</h3>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm rounded-xl overflow-hidden">
+          <thead>
+            <tr className="bg-gradient-to-r from-green-100 to-green-50">
+              <th className="text-left py-4 px-4 font-semibold text-gray-700">Patient Name</th>
+              <th className="text-left py-4 px-4 font-semibold text-gray-700">Doctor</th>
+              <th className="text-left py-4 px-4 font-semibold text-gray-700">Time</th>
+              <th className="text-left py-4 px-4 font-semibold text-gray-700">Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {appointments.map((a, idx) => (
+              <tr
+                key={idx}
+                className={`border-b border-gray-200 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-green-50 transition`}
+              >
+                <td className="py-5 px-4 rounded-l-xl">{a.name}</td>
+                <td className="py-4 px-4">{a.doctor}</td>
+                <td className="py-4 px-4">{a.time}</td>
+                <td className="py-4 px-4 rounded-r-xl">
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium shadow-sm ${getBadgeColor(a.status)}`}
+                  >
+                    {a.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
