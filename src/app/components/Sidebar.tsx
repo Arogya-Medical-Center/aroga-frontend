@@ -37,7 +37,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
       id: "dashboard",
       label: "Dashboard",
       icon: <DashboardIcon />,
-      href: "/dashboard",
+      href: "/dashboard/admin",
     },
     {
       id: "patients",
