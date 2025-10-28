@@ -88,13 +88,13 @@ export default function Sidebar({ user, navItems, className }: Props) {
     {
       id: "appointments-dashboard",
       label: "Appointments",
-      icon: <PatientsIcon />,
+      icon: <AppointmentsIcon />,
       href: "/appointments",
     },
     {
       id: "appointments-calendar",
       label: "Calendar",
-      icon: <PatientsIcon />,
+      icon: <CalendarIcon />,
       href: "/calendar",
     },
   ];

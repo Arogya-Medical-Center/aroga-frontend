@@ -1,3 +1,11 @@
+// Helper: produce a YYYY-MM-DD string using the local date (avoid UTC shift)
+function localDateString(d: Date) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 export function getInitialAppointments() {
   const today = new Date();
   const tomorrow = new Date(today);
@@ -10,19 +18,18 @@ export function getInitialAppointments() {
       id: '1',
       patientName: 'John Smith',
       doctorName: 'Smith',
-      date: today.toISOString().split('T')[0],
+      date: localDateString(today),
       time: '09:00',
       duration: '30',
       type: 'Check-up',
       status: 'scheduled',
       notes: 'Regular health checkup',
-    
     },
     {
       id: '2',
       patientName: 'Sarah Johnson',
       doctorName: 'Johnson',
-      date: today.toISOString().split('T')[0],
+      date: localDateString(today),
       time: '10:30',
       duration: '45',
       type: 'Consultation',
@@ -33,7 +40,7 @@ export function getInitialAppointments() {
       id: '3',
       patientName: 'Michael Brown',
       doctorName: 'Williams',
-      date: tomorrow.toISOString().split('T')[0],
+      date: localDateString(tomorrow),
       time: '14:00',
       duration: '30',
       type: 'Follow-up',
@@ -44,7 +51,7 @@ export function getInitialAppointments() {
       id: '4',
       patientName: 'Emily Davis',
       doctorName: 'Brown',
-      date: nextWeek.toISOString().split('T')[0],
+      date: localDateString(nextWeek),
       time: '11:00',
       duration: '60',
       type: 'Emergency',
