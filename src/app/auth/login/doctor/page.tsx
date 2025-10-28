@@ -5,21 +5,25 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function DoctorLoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('doctor');
   const [mobileEmail, setMobileEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log({ userType, mobileEmail, password, rememberMe });
-    // Redirect to admin dashboard after successful login
-    router.push('/dashboard/admin');
+    // Use auth context login
+    const success = await login(mobileEmail, password, 'doctor');
+    if (success) {
+      console.log('Login successful');
+      // Router will handle redirect automatically via AuthContext
+    }
   };
 
   const googleLogin = useGoogleLogin({
@@ -34,14 +38,9 @@ export default function DoctorLoginPage() {
         const userData = await userInfo.json();
         console.log('User data:', userData);
         
-        localStorage.setItem('user', JSON.stringify({
-          name: userData.name,
-          email: userData.email,
-          picture: userData.picture,
-          role: 'doctor'
-        }));
+        // Use the auth context login with Google user data
+        await login(userData.email, 'google-oauth', 'doctor');
         
-        router.push('/dashboard/admin');
       } catch (error) {
         console.error('Error fetching user info:', error);
       }

@@ -5,10 +5,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function PatientSignupPage() {
   const router = useRouter();
-  const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('patient');
+  const { login } = useAuth();
+  const [userType, setUserType] = useState<'doctor' | 'admin'>('admin');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
@@ -81,13 +83,15 @@ export default function PatientSignupPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      // Handle signup logic here
-      console.log({ userType, fullName, email, mobile, password, confirmPassword, agreeToTerms });
-      // Redirect to dashboard after successful signup
-      router.push('/dashboard/patients');
+      // Use auth context login - admin role
+      const success = await login(email, password, 'admin');
+      if (success) {
+        console.log('Signup successful');
+        // Router will handle redirect automatically via AuthContext
+      }
     }
   };
 
@@ -104,16 +108,9 @@ export default function PatientSignupPage() {
         const userData = await userInfo.json();
         console.log('User data:', userData);
         
-        // Store user data in localStorage
-        localStorage.setItem('user', JSON.stringify({
-          name: userData.name,
-          email: userData.email,
-          picture: userData.picture,
-          role: 'patient'
-        }));
+        // Use the auth context login with Google user data - admin role
+        await login(userData.email, 'google-oauth', 'admin');
         
-        // Redirect to patient dashboard
-        router.push('/dashboard/patient');
       } catch (error) {
         console.error('Error fetching user info:', error);
       }

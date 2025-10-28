@@ -4,6 +4,7 @@ import "./globals.css";
 import ConditionalLayout from "./components/ConditionalLayout";
 import { AppointmentProvider } from "./contexts/AppointmentContext";
 import GoogleOAuthProvider from "./components/GoogleOAuthProvider";
+import { AuthProvider } from "./contexts/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,13 +25,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="antialiased overflow-hidden">
-        <GoogleOAuthProvider>
-          <AppointmentProvider>
-            <ConditionalLayout>
-              {children}
-            </ConditionalLayout>
-          </AppointmentProvider>
-        </GoogleOAuthProvider>
+        <AuthProvider>
+          <GoogleOAuthProvider>
+            <AppointmentProvider>
+              <ConditionalLayout>
+                {children}
+              </ConditionalLayout>
+            </AppointmentProvider>
+          </GoogleOAuthProvider>
+        </AuthProvider>
       </body>
     </html>
   );
