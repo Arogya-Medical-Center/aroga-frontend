@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type NavItem = {
   id: string;
@@ -44,10 +46,36 @@ export default function Sidebar({ user, navItems, className }: Props) {
       href: "/dashboard/patients",
       active: true,
     },
+    {
+      id: "bmi-calculator",
+      label: "BMI Calculator",
+      icon: <BMICalculatorIcon />,
+      href: "/BMICalculator",
+    },
+    {
+      id: "drug-inventory",
+      label: "Drug Inventory",
+      icon: <PillIcon />,
+      href: "/dashboard/drug-inventory",
+    },
+    {
+      id: "appointments-dashboard",
+      label: "Appointments",
+      icon: <PatientsIcon />,
+      href: "/appointments",
+    },
+    {
+      id: "appointments-calendar",
+      label: "Calendar",
+      icon: <PatientsIcon />,
+      href: "/calendar",
+    },
   ];
 
   const currentUser = user || defaultUser;
   const nav = navItems || defaultNavItems;
+
+  const pathname = usePathname();
 
   return (
     <>
@@ -73,7 +101,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
         ].join(" ")}
       >
         {/* Header: Patient Management & Search */}
-        
+
         {/* User Profile */}
         <div className="px-4 py-5 border-b border-neutral-300">
           <div className="flex items-center gap-3">
@@ -95,9 +123,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
               <p className="text-sm font-semibold text-neutral-900">
                 {currentUser.name}
               </p>
-              <p className="text-xs text-neutral-600">
-                {currentUser.role}
-              </p>
+              <p className="text-xs text-neutral-600">{currentUser.role}</p>
             </div>
           </div>
         </div>
@@ -105,22 +131,27 @@ export default function Sidebar({ user, navItems, className }: Props) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4 px-2">
           <ul className="space-y-1">
-            {nav.map((item) => (
-              <li key={item.id}>
-                <a
-                  href={item.href}
-                  className={[
-                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                    item.active
-                      ? "bg-green-100 text-green-800"
-                      : "text-neutral-700 hover:bg-neutral-100",
-                  ].join(" ")}
-                >
-                  {item.icon}
-                  <span>{item.label}</span>
-                </a>
-              </li>
-            ))}
+            {nav.map((item) => {
+              const isActive =
+                pathname === item.href ||
+                (item.href !== "/" && pathname?.startsWith(item.href));
+              return (
+                <li key={item.id}>
+                  <a
+                    href={item.href}
+                    className={[
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                      isActive
+                        ? "bg-green-100 text-green-800"
+                        : "text-neutral-700 hover:bg-neutral-100",
+                    ].join(" ")}
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
@@ -166,7 +197,13 @@ export default function Sidebar({ user, navItems, className }: Props) {
 // Icons
 function MenuIcon() {
   return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="M3 12h18M3 6h18M3 18h18" />
     </svg>
   );
@@ -174,7 +211,13 @@ function MenuIcon() {
 
 function DashboardIcon() {
   return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <rect x="3" y="3" width="7" height="7" rx="1" />
       <rect x="14" y="3" width="7" height="7" rx="1" />
       <rect x="14" y="14" width="7" height="7" rx="1" />
@@ -185,7 +228,13 @@ function DashboardIcon() {
 
 function PatientsIcon() {
   return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
       <circle cx="9" cy="7" r="4" />
       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -194,9 +243,30 @@ function PatientsIcon() {
   );
 }
 
+function PillIcon() {
+  return (
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path d="M20.59 3.41a5 5 0 0 0-7.07 0L3.41 13.52a5 5 0 0 0 7.07 7.07l10.12-10.12a5 5 0 0 0 0-7.06z" />
+      <path d="M8.46 8.46l7.07 7.07" />
+    </svg>
+  );
+}
+
 function SettingsIcon() {
   return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <circle cx="12" cy="12" r="3" />
       <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24" />
     </svg>
@@ -205,10 +275,39 @@ function SettingsIcon() {
 
 function LogOutIcon() {
   return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
       <polyline points="16 17 21 12 16 7" />
       <line x1="21" y1="12" x2="9" y2="12" />
+    </svg>
+  );
+}
+
+function BMICalculatorIcon() {
+  return (
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="4" y="2" width="16" height="20" rx="2" />
+      <rect x="7" y="5" width="10" height="4" rx="1" />
+      <rect x="7" y="11" width="3" height="3" rx="0.5" />
+      <rect x="11" y="11" width="3" height="3" rx="0.5" />
+      <rect x="15" y="11" width="3" height="3" rx="0.5" />
+      <rect x="7" y="16" width="3" height="3" rx="0.5" />
+      <rect x="11" y="16" width="3" height="3" rx="0.5" />
+      <rect x="15" y="16" width="3" height="3" rx="0.5" />
     </svg>
   );
 }

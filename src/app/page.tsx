@@ -1,4 +1,5 @@
-import Image from "next/image";
+import DashboardAppointments from './components/DashboardAppointments';
+
 
 export default function Home() {
   return (
@@ -7,6 +8,10 @@ export default function Home() {
       <p className="text-neutral-700">
         This is the home page of the Arogya Healthcare Center application. Use the sidebar to navigate through different sections of the dashboard.
       </p>
+
+  {/* Appointments section below the dashboard content */}
+
+      
     </div>
   );
 }
