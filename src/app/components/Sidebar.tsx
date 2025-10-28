@@ -61,13 +61,13 @@ export default function Sidebar({ user, navItems, className }: Props) {
     {
       id: "appointments-dashboard",
       label: "Appointments",
-      icon: <PatientsIcon />,
+      icon: <AppointmentsIcon />,
       href: "/appointments",
     },
     {
       id: "appointments-calendar",
       label: "Calendar",
-      icon: <PatientsIcon />,
+      icon: <CalendarIcon />,
       href: "/calendar",
     },
   ];
@@ -224,6 +224,24 @@ function PatientsIcon() {
   );
 }
 
+function AppointmentsIcon() {
+  return (
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M16 2v4M8 2v4M3 10h18" />
+      <path d="M9 15h6M12 12v6" />
+    </svg>
+  );
+}
+
 function PillIcon() {
   return (
     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -271,6 +289,15 @@ function BMICalculatorIcon() {
       <rect x="7" y="16" width="3" height="3" rx="0.5" />
       <rect x="11" y="16" width="3" height="3" rx="0.5" />
       <rect x="15" y="16" width="3" height="3" rx="0.5" />
+    </svg>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M16 2v4M8 2v4M3 10h18" />
     </svg>
   );
 }
