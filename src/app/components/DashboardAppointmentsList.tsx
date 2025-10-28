@@ -58,7 +58,7 @@ export default function DashboardAppointmentsList() {
                 {appointments.map((apt: any) => (
                   <tr key={apt.id} className="border-t">
                     <td className="py-3 text-black">{apt.patientName || '—'}</td>
-                    <td className="py-3 text-black">{apt.doctorName || '—'}</td>
+                    <td className="py-3 text-black">{'Dr. Danushka Ranasinghe'}</td>
                     <td className="py-3 text-black">{apt.date || '—'}</td>
                     <td className="py-3 text-black">{apt.time || '—'}</td>
                     <td className="py-3 text-black">
