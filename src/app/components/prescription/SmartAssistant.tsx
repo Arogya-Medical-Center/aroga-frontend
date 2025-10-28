@@ -149,7 +149,7 @@ export default function SmartAssistant({ initialIllness, onIllnessChangeAction }
                     <div key={md.drugId} className="flex items-center justify-between gap-3">
                       <div>
                         <div className="font-medium">{drug.name} <span className="text-xs text-neutral-700">({drug.unit})</span></div>
-                        <div className="text-xs text-neutral-700">Category: {drug.category} • Stock: {drug.quantity}</div>
+                        <div className="text-xs text-neutral-700">Category: {drug.category} • {drug.unit}</div>
                       </div>
                       <div className="text-right">
                         <div className="font-semibold">{computeDose(selectedRule)}</div>
