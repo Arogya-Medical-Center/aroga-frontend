@@ -10,11 +10,45 @@ export default function PatientLoginPage() {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState<{ mobileEmail?: string; password?: string }>({});
+
+  const validateForm = () => {
+    const newErrors: { mobileEmail?: string; password?: string } = {};
+
+    // Validate email/mobile
+    if (!mobileEmail.trim()) {
+      newErrors.mobileEmail = 'Email or mobile number is required';
+    } else if (mobileEmail.includes('@')) {
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(mobileEmail)) {
+        newErrors.mobileEmail = 'Please enter a valid email address';
+      }
+    } else {
+      // Mobile validation
+      const mobileRegex = /^[0-9]{10}$/;
+      if (!mobileRegex.test(mobileEmail.replace(/[\s-]/g, ''))) {
+        newErrors.mobileEmail = 'Please enter a valid 10-digit mobile number';
+      }
+    }
+
+    // Validate password
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log({ userType, mobileEmail, password, rememberMe });
+    if (validateForm()) {
+      // Handle login logic here
+      console.log({ userType, mobileEmail, password, rememberMe });
+    }
   };
 
   const handleGoogleSignIn = () => {
@@ -23,37 +57,39 @@ export default function PatientLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden" data-auth-page>
       {/* Left Side - Image Section */}
       <div className="hidden lg:flex lg:w-1/2 bg-gray-100 relative">
         <div className="absolute top-8 left-8 flex items-center gap-2 z-20">
         </div>
         
         <div className="relative w-full h-full p-8">
-          <div className="relative w-full h-full border-8 rounded-lg overflow-hidden" style={{ borderColor: '#E8EAED' }}>
-            <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/20">
-              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-lg px-8">
+          <div className="relative w-full h-full rounded-lg overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-2xl px-8" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}>
                 Get trusted<br />
                 medical<br />
                 opinions in<br />
                 minutes.
               </h1>
             </div>
-            <Image 
-              src="/patient.jpg" 
-              alt="Patient consultation" 
-              fill
-              className="object-cover"
-              priority
-            />
+            <video 
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="/doctor.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
 
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-white">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex px-8 py-8 bg-white overflow-y-auto">
+        <div className="w-full max-w-md mx-auto">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8">
             <div className="w-10 h-10 bg-brand rounded-lg flex items-center justify-center">
@@ -108,12 +144,19 @@ export default function PatientLoginPage() {
                   type="text"
                   id="mobile-email"
                   value={mobileEmail}
-                  onChange={(e) => setMobileEmail(e.target.value)}
+                  onChange={(e) => {
+                    setMobileEmail(e.target.value);
+                    if (errors.mobileEmail) setErrors({ ...errors, mobileEmail: undefined });
+                  }}
                   placeholder="e.g., patient@example.com or +1234567890"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
-                  required
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent ${
+                    errors.mobileEmail ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 />
               </div>
+              {errors.mobileEmail && (
+                <p className="mt-1 text-sm text-red-600">{errors.mobileEmail}</p>
+              )}
             </div>
 
             {/* Password Input */}
@@ -131,12 +174,19 @@ export default function PatientLoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) setErrors({ ...errors, password: undefined });
+                  }}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
-                  required
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent ${
+                    errors.password ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 />
               </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              )}
             </div>
 
             {/* Remember Me & Forgot Password */}
@@ -147,7 +197,7 @@ export default function PatientLoginPage() {
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="w-4 h-4 border-gray-300 rounded focus:ring-brand"
-                  style={{ accentColor: '#3E7FA6' }}
+                  style={{ accentColor: '#10B981' }}
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>

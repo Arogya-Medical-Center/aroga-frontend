@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function AdminLoginPage() {
+  const router = useRouter();
   const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('admin');
   const [email, setEmail] = useState('');
   const [adminId, setAdminId] = useState('');
@@ -17,40 +19,45 @@ export default function AdminLoginPage() {
     e.preventDefault();
     // Handle login logic here
     console.log({ userType, email, adminId, password, rememberMe, loginMethod });
+    
+    // Route to admin dashboard after login
+    router.push('/dashboard/admin');
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden" data-auth-page>
       {/* Left Side - Image Section */}
       <div className="hidden lg:flex lg:w-1/2 bg-gray-100 relative">
         <div className="absolute top-8 left-8 flex items-center gap-2 z-20">
         </div>
         
         <div className="relative w-full h-full p-8">
-          <div className="relative w-full h-full border-8 rounded-lg overflow-hidden" style={{ borderColor: '#E8EAED' }}>
-            <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/20">
-              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-lg px-8">
+          <div className="relative w-full h-full rounded-lg overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-2xl px-8" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}>
                 Manage and<br />
                 oversee<br />
                 healthcare<br />
                 excellence.
               </h1>
             </div>
-            <Image 
-              src="/doctor.jpg" 
-              alt="Healthcare management" 
-              fill
-              className="object-cover"
-              priority
-            />
+            <video 
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="/admin2.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
 
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-white">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex px-8 py-8 bg-white overflow-y-auto">
+        <div className="w-full max-w-md mx-auto">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8">
             <div className="w-10 h-10 bg-brand rounded-lg flex items-center justify-center">
@@ -102,7 +109,7 @@ export default function AdminLoginPage() {
                   checked={loginMethod === 'email'}
                   onChange={(e) => setLoginMethod(e.target.value as 'email')}
                   className="w-4 h-4 border-gray-300"
-                  style={{ accentColor: '#3E7FA6' }}
+                  style={{ accentColor: '#10B981' }}
                 />
                 <span className="ml-2 text-sm font-medium text-gray-700">Email</span>
               </label>
@@ -114,7 +121,7 @@ export default function AdminLoginPage() {
                   checked={loginMethod === 'adminId'}
                   onChange={(e) => setLoginMethod(e.target.value as 'adminId')}
                   className="w-4 h-4 border-gray-300"
-                  style={{ accentColor: '#3E7FA6' }}
+                  style={{ accentColor: '#10B981' }}
                 />
                 <span className="ml-2 text-sm font-medium text-gray-700">Admin ID</span>
               </label>
