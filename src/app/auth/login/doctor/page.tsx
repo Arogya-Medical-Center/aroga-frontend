@@ -18,6 +18,8 @@ export default function DoctorLoginPage() {
     e.preventDefault();
     // Handle login logic here
     console.log({ userType, mobileEmail, password, rememberMe });
+    // Redirect to admin dashboard after successful login
+    router.push('/dashboard/admin');
   };
 
   const googleLogin = useGoogleLogin({
@@ -39,7 +41,7 @@ export default function DoctorLoginPage() {
           role: 'doctor'
         }));
         
-        router.push('/dashboard/doctor');
+        router.push('/dashboard/admin');
       } catch (error) {
         console.error('Error fetching user info:', error);
       }

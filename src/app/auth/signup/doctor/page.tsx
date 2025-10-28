@@ -54,6 +54,8 @@ export default function DoctorSignupPage() {
       confirmPassword, 
       agreeToTerms 
     });
+    // Redirect to admin dashboard after successful signup
+    router.push('/dashboard/admin');
   };
 
   const googleSignup = useGoogleLogin({
@@ -75,7 +77,7 @@ export default function DoctorSignupPage() {
           role: 'doctor'
         }));
         
-        router.push('/dashboard/doctor');
+        router.push('/dashboard/admin');
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
