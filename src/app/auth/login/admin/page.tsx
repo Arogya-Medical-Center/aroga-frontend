@@ -4,10 +4,12 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('admin');
+  const { login } = useAuth();
+  const [userType, setUserType] = useState<'doctor' | 'admin'>('admin');
   const [email, setEmail] = useState('');
   const [adminId, setAdminId] = useState('');
   const [password, setPassword] = useState('');
@@ -15,13 +17,15 @@ export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loginMethod, setLoginMethod] = useState<'email' | 'adminId'>('email');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log({ userType, email, adminId, password, rememberMe, loginMethod });
-    
-    // Route to admin dashboard after login
-    router.push('/dashboard/admin');
+    // Use auth context login
+    const identifier = loginMethod === 'email' ? email : adminId;
+    const success = await login(identifier, password, 'admin');
+    if (success) {
+      console.log('Login successful');
+      // Router will handle redirect automatically via AuthContext
+    }
   };
 
   return (
@@ -200,9 +204,7 @@ export default function AdminLoginPage() {
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <Link href="/auth/forgot-password/admin" className="text-sm text-brand hover:text-brand-hover font-medium">
-                Forgot Password?
-              </Link>
+              
             </div>
 
             {/* Sign In Button */}
@@ -226,13 +228,7 @@ export default function AdminLoginPage() {
             </div>
           </div>
 
-          {/* Contact Support Link */}
-          <p className="text-center text-sm text-gray-600 mt-6">
-            Need help?{' '}
-            <Link href="/support" className="text-brand hover:text-brand-hover font-medium">
-              Contact Support
-            </Link>
-          </p>
+        
           </div>
           {/* End of Rounded Box Container */}
         </div>

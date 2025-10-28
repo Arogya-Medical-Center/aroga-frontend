@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "../contexts/AuthContext";
 
 type NavItem = {
   id: string;
@@ -25,6 +26,7 @@ type Props = {
 
 export default function Sidebar({ user, navItems, className }: Props) {
   const [open, setOpen] = useState(false);
+  const { logout, user: authUser, hasAccess } = useAuth();
 
   const defaultUser = {
     name: "Dr. Danushka Ranasinghe",
@@ -45,6 +47,12 @@ export default function Sidebar({ user, navItems, className }: Props) {
       icon: <PatientsIcon />,
       href: "/dashboard/patients",
       active: true,
+    },
+    {
+      id: "registration",
+      label: "Patient Registration",
+      icon: <PatientsIcon />,
+      href: "/patient-registration",
     },
     {
       id: "profile",
@@ -79,7 +87,13 @@ export default function Sidebar({ user, navItems, className }: Props) {
   ];
 
   const currentUser = user || defaultUser;
-  const nav = navItems || defaultNavItems;
+  
+  // Filter nav items based on user role permissions
+  const filteredNavItems = (navItems || defaultNavItems).filter(item => 
+    hasAccess(item.href)
+  );
+  
+  const nav = filteredNavItems;
 
   const pathname = usePathname();
 
@@ -180,6 +194,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
 
           <button
             type="button"
+            onClick={logout}
             className="flex items-center gap-3 w-full rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
           >
             <LogOutIcon />

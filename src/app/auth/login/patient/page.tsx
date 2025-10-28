@@ -5,10 +5,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function PatientLoginPage() {
   const router = useRouter();
-  const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('patient');
+  const { login } = useAuth();
+  const [userType, setUserType] = useState<'doctor' | 'admin'>('admin');
   const [mobileEmail, setMobileEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -46,7 +48,7 @@ export default function PatientLoginPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
       // Handle login logic here
@@ -69,16 +71,9 @@ export default function PatientLoginPage() {
         const userData = await userInfo.json();
         console.log('User data:', userData);
         
-        // Store user data in localStorage
-        localStorage.setItem('user', JSON.stringify({
-          name: userData.name,
-          email: userData.email,
-          picture: userData.picture,
-          role: 'patient'
-        }));
+        // Use the auth context login with Google user data - admin role
+        await login(userData.email, 'google-oauth', 'admin');
         
-        // Redirect to patient dashboard
-        router.push('/dashboard/patients');
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
