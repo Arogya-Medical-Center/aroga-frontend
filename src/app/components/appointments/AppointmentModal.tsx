@@ -164,7 +164,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                   <option value="pending">Pending</option>
                   <option value="completed">Completed</option>
                   <option value="cancelled">Cancelled</option>
-                  <option value="noshow ">No-show</option>
+                 
                 </select>
               </div>
               

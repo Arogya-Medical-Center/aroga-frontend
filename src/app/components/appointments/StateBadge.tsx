@@ -1,6 +1,6 @@
 'use client';
 
-type AppointmentStatus = 'scheduled' | 'pending' | 'completed' | 'noshow' | 'cancelled';
+type AppointmentStatus = 'scheduled' | 'pending' | 'completed' |  'cancelled';
 
 interface StatusBadgeProps {
   status: AppointmentStatus;
@@ -8,24 +8,27 @@ interface StatusBadgeProps {
 
 function StatusBadge({ status }: StatusBadgeProps) {
   try {
-    const statusConfig: Record<
-      AppointmentStatus,
-      { label: string; className: string; icon: string }
-    > = {
-      scheduled: { label: 'Scheduled', className: 'status-scheduled', icon: 'check-circle' },
-      pending: { label: 'Pending', className: 'status-pending', icon: 'clock' },
-      completed: { label: 'Completed', className: 'status-completed', icon: 'check-circle-2' },
-      noshow: { label: 'No-show', className: 'status-noshow', icon: 'x-circle' },
-      cancelled: { label: 'Cancelled', className: 'status-cancelled', icon: 'ban' }
+    // Map statuses to Tailwind utility classes so the badge looks like a small button
+    const statusConfig: Record<AppointmentStatus, { label: string; classes: string; icon: string }> = {
+      scheduled: { label: 'Scheduled', classes: 'bg-green-500 text-white border border-green-500', icon: 'check-circle' },
+      pending: { label: 'Pending', classes: 'bg-yellow-500 text-white border border-yellow-500', icon: 'clock' },
+      completed: { label: 'Completed', classes: 'bg-blue-500 text-white border border-blue-500', icon: 'check-circle-2' },
+     // noshow: { label: 'No-show', classes: 'bg-gray-500 text-white border border-gray-500', icon: 'x-circle' },
+      cancelled: { label: 'Cancelled', classes: 'bg-red-500 text-white border border-red-500', icon: 'ban' }
     };
 
-    const config = statusConfig[status] || statusConfig.pending;
+    const cfg = statusConfig[status as AppointmentStatus] ?? statusConfig.pending;
 
     return (
-      <span className={`status-badge ${config.className}`} data-name="status-badge" data-file="components/StatusBadge.js">
-        <div className={`icon-${config.icon} text-xs mr-1`}></div>
-        {config.label}
-      </span>
+      <button
+        type="button"
+        className={`inline-flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium ${cfg.classes}`}
+        data-name="status-badge"
+        aria-label={`status-${status}`}
+      >
+        <div className={`icon-${cfg.icon} text-xs`} />
+        <span>{cfg.label}</span>
+      </button>
     );
   } catch (error) {
     console.error('StatusBadge component error:', error);

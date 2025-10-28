@@ -31,7 +31,7 @@ body {
 [data-name="dashboard-appointments"],
 [data-name="appointment-modal"],
 [data-name="appointment-details"] {
-  color: #000;
+  color: #000000;
   --text-secondary: #000000;
   --text-primary: #000000;
   --foreground: #000000;
@@ -43,6 +43,53 @@ body {
 [data-name="dashboard-appointments"] *,
 [data-name="appointment-modal"] *,
 [data-name="appointment-details"] * {
-  color: #000 !important;
+  color: #000000 !important;
+}
+
+/* ...existing code... */
+
+/* Override: only make button / button-like element text & icons white inside appointment/calendar areas */
+[data-name="calendar-view"] button,
+[data-name="calendar-view"] a.btn,
+[data-name="calendar-view"] .btn,
+[data-name="calendar-view"] input[type="button"],
+[data-name="calendar-view"] input[type="submit"],
+[data-name="calendar"] button,
+[data-name="calendar"] a.btn,
+[data-name="calendar"] .btn,
+[data-name="calendar"] input[type="button"],
+[data-name="calendar"] input[type="submit"],
+[data-name="dashboard-appointments"] button,
+[data-name="dashboard-appointments"] a.btn,
+[data-name="dashboard-appointments"] .btn,
+[data-name="dashboard-appointments"] input[type="button"],
+[data-name="dashboard-appointments"] input[type="submit"],
+[data-name="appointment-modal"] button,
+[data-name="appointment-modal"] a.btn,
+[data-name="appointment-modal"] .btn,
+[data-name="appointment-modal"] input[type="button"],
+[data-name="appointment-modal"] input[type="submit"],
+[data-name="appointment-details"] button,
+[data-name="appointment-details"] a.btn,
+[data-name="appointment-details"] .btn,
+[data-name="appointment-details"] input[type="button"],
+[data-name="appointment-details"] input[type="submit"] {
+  color: #ffffff !important;
+}
+
+/* Ensure icon elements inside those buttons also render white */
+[data-name="calendar-view"] button svg,
+[data-name="calendar-view"] button .icon,
+[data-name="calendar"] button svg,
+[data-name="calendar"] button .icon,
+[data-name="dashboard-appointments"] button svg,
+[data-name="dashboard-appointments"] button .icon,
+[data-name="appointment-modal"] button svg,
+[data-name="appointment-modal"] button .icon,
+[data-name="appointment-details"] button svg,
+[data-name="appointment-details"] button .icon {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
 }
 

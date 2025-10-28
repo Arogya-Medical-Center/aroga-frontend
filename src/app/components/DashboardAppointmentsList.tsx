@@ -2,6 +2,7 @@
 import React, { useContext } from 'react';
 import { AppointmentContext } from '../contexts/AppointmentContext';
 import { ErrorBoundary, AppointmentModal, AppointmentDetails } from './index';
+import StatusBadge from './appointments/StateBadge';
 
 export default function DashboardAppointmentsList() {
   const ctx = useContext(AppointmentContext) as any;
@@ -60,7 +61,9 @@ export default function DashboardAppointmentsList() {
                     <td className="py-3 text-black">{apt.doctorName || '—'}</td>
                     <td className="py-3 text-black">{apt.date || '—'}</td>
                     <td className="py-3 text-black">{apt.time || '—'}</td>
-                    <td className="py-3 text-black">{apt.status || 'scheduled'}</td>
+                    <td className="py-3 text-black">
+                      <StatusBadge status={(apt.status as any) || 'scheduled'} />
+                    </td>
                     <td className="py-3 text-black">
                       <div className="flex gap-2">
                         <button className="btn btn-sm text-blue-600 font-light" onClick={() => openDetailsModal(apt)}>View</button>

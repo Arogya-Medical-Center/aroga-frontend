@@ -57,7 +57,7 @@ function AppointmentDetails({ appointment, onClose, onEdit, onDelete }: Appointm
             <div className="space-y-6">
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-secondary)] mb-3">Patient Information</h3>
-                <div className="bg-green-200 p-4 rounded-lg">
+                <div className="bg-green-100 p-4 rounded-lg">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-10 h-10 rounded-full bg-[var(--primary-color)] bg-opacity-10 flex items-center justify-center">
                       <div className="icon-user text-lg text-[var(--primary-color)]"></div>
@@ -138,13 +138,13 @@ function AppointmentDetails({ appointment, onClose, onEdit, onDelete }: Appointm
               {/* Cancel button to close the details modal */}
               <button
                 onClick={onClose}
-                className="btn btn-secondary flex-1 flex items-center justify-center gap-2 w-4 rounded-lg bg-yellow-300 hover:bg-yellow-400 py-2.5 transition-colors text-black"
+                className="btn btn-secondary flex-1 flex items-center justify-center gap-2 w-4 rounded-lg bg-amber-500 hover:bg-amber-600 py-2.5 transition-colors text-black"
               >
                 <div className="icon-x text-base"></div>
                 Cancel
               </button>
 
-              <button onClick={onEdit} className="btn btn-primary flex-1 flex items-center justify-center gap-2 w-4 rounded-lg bg-green-500 hover:bg-green-600 py-2.5 transition-colors text-white">
+              <button onClick={onEdit} className="btn btn-primary flex-1 flex items-center justify-center gap-2 w-4 rounded-lg bg-green-400 hover:bg-green-500 py-2.5 transition-colors text-white">
                 <div className="icon-pencil text-base"></div>
                 Edit Appointment
               </button>
