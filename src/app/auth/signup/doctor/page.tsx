@@ -3,8 +3,11 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useRouter } from 'next/navigation';
 
 export default function DoctorSignupPage() {
+  const router = useRouter();
   const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('doctor');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -53,10 +56,34 @@ export default function DoctorSignupPage() {
     });
   };
 
-  const handleGoogleSignUp = () => {
-    // Handle Google sign up logic here
-    console.log('Google sign up');
-  };
+  const googleSignup = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log('Google signup success:', tokenResponse);
+      
+      try {
+        const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        });
+        
+        const userData = await userInfo.json();
+        console.log('User data:', userData);
+        
+        localStorage.setItem('user', JSON.stringify({
+          name: userData.name,
+          email: userData.email,
+          picture: userData.picture,
+          role: 'doctor'
+        }));
+        
+        router.push('/dashboard/doctor');
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    },
+    onError: (error) => {
+      console.error('Google signup failed:', error);
+    },
+  });
 
   return (
     <div className="flex h-screen overflow-hidden" data-auth-page>
@@ -387,7 +414,7 @@ export default function DoctorSignupPage() {
           {/* Google Sign Up */}
           <button
             type="button"
-            onClick={handleGoogleSignUp}
+            onClick={() => googleSignup()}
             className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
