@@ -24,8 +24,8 @@ export default function AdminDashboardPage() {
     icon: <CalendarDays size={36} className="text-green-500" />,
   },
   {
-    title: "Bed Occupancy",
-    value: "75%",
+    title: "Total Prescriptions",
+    value: "1234",
     icon: <Activity size={36} className="text-green-500" />,
   },
 ];

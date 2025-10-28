@@ -3,9 +3,14 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function PatientSignupPage() {
-  const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('patient');
+  const router = useRouter();
+  const { login } = useAuth();
+  const [userType, setUserType] = useState<'doctor' | 'admin'>('admin');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
@@ -14,50 +19,141 @@ export default function PatientSignupPage() {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState<{
+    fullName?: string;
+    email?: string;
+    mobile?: string;
+    password?: string;
+    confirmPassword?: string;
+    agreeToTerms?: string;
+  }>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = () => {
+    const newErrors: any = {};
+
+    // Validate full name
+    if (!fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
+    } else if (fullName.trim().length < 2) {
+      newErrors.fullName = 'Name must be at least 2 characters';
+    }
+
+    // Validate email
+    if (!email.trim()) {
+      newErrors.email = 'Email is required';
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        newErrors.email = 'Please enter a valid email address';
+      }
+    }
+
+    // Validate mobile
+    if (!mobile.trim()) {
+      newErrors.mobile = 'Mobile number is required';
+    } else {
+      const mobileRegex = /^[0-9]{10}$/;
+      if (!mobileRegex.test(mobile.replace(/[\s-]/g, ''))) {
+        newErrors.mobile = 'Please enter a valid 10-digit mobile number';
+      }
+    }
+
+    // Validate password
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+      newErrors.password = 'Password must contain uppercase, lowercase, and number';
+    }
+
+    // Validate confirm password
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (password !== confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    // Validate terms
+    if (!agreeToTerms) {
+      newErrors.agreeToTerms = 'You must agree to the terms and conditions';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log({ userType, fullName, email, mobile, password, confirmPassword, agreeToTerms });
+    if (validateForm()) {
+      // Use auth context login - admin role
+      const success = await login(email, password, 'admin');
+      if (success) {
+        console.log('Signup successful');
+        // Router will handle redirect automatically via AuthContext
+      }
+    }
   };
 
-  const handleGoogleSignUp = () => {
-    // Handle Google sign up logic here
-    console.log('Google sign up');
-  };
+  const googleSignup = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log('Google signup success:', tokenResponse);
+      
+      try {
+        // Fetch user info from Google
+        const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        });
+        
+        const userData = await userInfo.json();
+        console.log('User data:', userData);
+        
+        // Use the auth context login with Google user data - admin role
+        await login(userData.email, 'google-oauth', 'admin');
+        
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    },
+    onError: (error) => {
+      console.error('Google signup failed:', error);
+    },
+  });
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden" data-auth-page>
       {/* Left Side - Image Section */}
       <div className="hidden lg:flex lg:w-1/2 bg-gray-100 relative">
         <div className="absolute top-8 left-8 flex items-center gap-2 z-20">
         </div>
         
         <div className="relative w-full h-full p-8">
-          <div className="relative w-full h-full border-8 rounded-lg overflow-hidden" style={{ borderColor: '#E8EAED' }}>
-            <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/20">
-              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-lg px-8">
+          <div className="relative w-full h-full rounded-lg overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-2xl px-8" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}>
                 Join us for<br />
                 trusted medical<br />
                 opinions in<br />
                 minutes.
               </h1>
             </div>
-            <Image 
-              src="/patient.jpg" 
-              alt="Patient consultation" 
-              fill
-              className="object-cover"
-              priority
-            />
+            <video 
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="/doctor.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
 
       </div>
 
       {/* Right Side - Signup Form */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-white">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex px-8 py-8 bg-white overflow-y-auto">
+        <div className="w-full max-w-md mx-auto">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8">
             <div className="w-10 h-10 bg-brand rounded-lg flex items-center justify-center">
@@ -69,7 +165,7 @@ export default function PatientSignupPage() {
           </div>
 
           {/* Rounded Box Container */}
-          <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-8 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-8">
           <h2 className="text-4xl font-bold text-gray-900 mb-2">Sign Up</h2>
           <p className="text-gray-600 mb-8">Create your account to get started.</p>
 
@@ -106,12 +202,19 @@ export default function PatientSignupPage() {
                   type="text"
                   id="full-name"
                   value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                    if (errors.fullName) setErrors({ ...errors, fullName: undefined });
+                  }}
                   placeholder="e.g., John Doe"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
-                  required
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent ${
+                    errors.fullName ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 />
               </div>
+              {errors.fullName && (
+                <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
+              )}
             </div>
 
             {/* Email Input */}
@@ -129,12 +232,19 @@ export default function PatientSignupPage() {
                   type="email"
                   id="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) setErrors({ ...errors, email: undefined });
+                  }}
                   placeholder="e.g., patient@example.com"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
-                  required
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent ${
+                    errors.email ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 />
               </div>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
             </div>
 
             {/* Mobile Input */}
@@ -152,12 +262,19 @@ export default function PatientSignupPage() {
                   type="tel"
                   id="mobile"
                   value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
+                  onChange={(e) => {
+                    setMobile(e.target.value);
+                    if (errors.mobile) setErrors({ ...errors, mobile: undefined });
+                  }}
                   placeholder="e.g., +1234567890"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
-                  required
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent ${
+                    errors.mobile ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 />
               </div>
+              {errors.mobile && (
+                <p className="mt-1 text-sm text-red-600">{errors.mobile}</p>
+              )}
             </div>
 
             {/* Password Input */}
@@ -175,12 +292,19 @@ export default function PatientSignupPage() {
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) setErrors({ ...errors, password: undefined });
+                  }}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
-                  required
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent ${
+                    errors.password ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 />
               </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+              )}
             </div>
 
             {/* Confirm Password Input */}
@@ -198,35 +322,49 @@ export default function PatientSignupPage() {
                   type={showConfirmPassword ? 'text' : 'password'}
                   id="confirm-password"
                   value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    if (errors.confirmPassword) setErrors({ ...errors, confirmPassword: undefined });
+                  }}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
-                  required
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent ${
+                    errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                  }`}
                 />
               </div>
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
+              )}
             </div>
 
             {/* Terms and Conditions */}
-            <div className="flex items-start">
-              <input
-                type="checkbox"
-                id="agree-terms"
-                checked={agreeToTerms}
-                onChange={(e) => setAgreeToTerms(e.target.checked)}
-                className="w-4 h-4 mt-1 border-gray-300 rounded focus:ring-brand"
-                style={{ accentColor: '#3E7FA6' }}
-                required
-              />
-              <label htmlFor="agree-terms" className="ml-2 text-sm text-gray-600">
-                I agree to the{' '}
-                <Link href="/terms" className="text-brand hover:text-brand-hover font-medium">
-                  Terms and Conditions
-                </Link>
-                {' '}and{' '}
-                <Link href="/privacy" className="text-brand hover:text-brand-hover font-medium">
-                  Privacy Policy
-                </Link>
-              </label>
+            <div>
+              <div className="flex items-start">
+                <input
+                  type="checkbox"
+                  id="agree-terms"
+                  checked={agreeToTerms}
+                  onChange={(e) => {
+                    setAgreeToTerms(e.target.checked);
+                    if (errors.agreeToTerms) setErrors({ ...errors, agreeToTerms: undefined });
+                  }}
+                  className="w-4 h-4 mt-1 border-gray-300 rounded focus:ring-brand"
+                  style={{ accentColor: '#10B981' }}
+                />
+                <label htmlFor="agree-terms" className="ml-2 text-sm text-gray-600">
+                  I agree to the{' '}
+                  <Link href="/terms" className="text-brand hover:text-brand-hover font-medium">
+                    Terms and Conditions
+                  </Link>
+                  {' '}and{' '}
+                  <Link href="/privacy" className="text-brand hover:text-brand-hover font-medium">
+                    Privacy Policy
+                  </Link>
+                </label>
+              </div>
+              {errors.agreeToTerms && (
+                <p className="mt-1 text-sm text-red-600">{errors.agreeToTerms}</p>
+              )}
             </div>
 
             {/* Sign Up Button */}
@@ -251,7 +389,7 @@ export default function PatientSignupPage() {
           {/* Google Sign Up */}
           <button
             type="button"
-            onClick={handleGoogleSignUp}
+            onClick={() => googleSignup()}
             className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">

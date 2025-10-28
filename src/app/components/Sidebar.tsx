@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "../contexts/AuthContext";
 
 type NavItem = {
   id: string;
@@ -26,6 +27,7 @@ type Props = {
 
 export default function Sidebar({ user, navItems, className }: Props) {
   const [open, setOpen] = useState(false);
+  const { logout, user: authUser, hasAccess } = useAuth();
 
   const defaultUser = {
     name: "Dr. Danushka Ranasinghe",
@@ -60,10 +62,23 @@ export default function Sidebar({ user, navItems, className }: Props) {
       href: "/patient-profile",
     },
     {
+
       id: "bmi-calculator",
       label: "BMI Calculator",
       icon: <BMICalculatorIcon />,
       href: "/BMICalculator",
+    },
+    {
+      id: "create-prescription",
+      label: "Create Prescription",
+      icon: <PrescriptionIcon />,
+      href: "/dashboard/create-prescription",
+    },
+    {
+      id: "prescription-assistant",
+      label: "Treatment Protocols",
+      icon: <PillIcon />,
+      href: "/dashboard/prescription-assistant",
     },
     {
       id: "drug-inventory",
@@ -74,7 +89,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
     {
       id: "appointments-dashboard",
       label: "Appointments",
-      icon: <PatientsIcon />,
+      icon: <AppointmentsIcon />,
       href: "/appointments",
     },
     {
@@ -86,13 +101,19 @@ export default function Sidebar({ user, navItems, className }: Props) {
     {
       id: "appointments-calendar",
       label: "Calendar",
-      icon: <PatientsIcon />,
+      icon: <CalendarIcon />,
       href: "/calendar",
     },
   ];
 
   const currentUser = user || defaultUser;
-  const nav = navItems || defaultNavItems;
+  
+  // Filter nav items based on user role permissions
+  const filteredNavItems = (navItems || defaultNavItems).filter(item => 
+    hasAccess(item.href)
+  );
+  
+  const nav = filteredNavItems;
 
   const pathname = usePathname();
 
@@ -176,12 +197,12 @@ export default function Sidebar({ user, navItems, className }: Props) {
 
         {/* Bottom Actions */}
         <div className="border-t border-neutral-300 p-4 space-y-3">
-          <button
-            type="button"
-            className="w-full rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium text-sm py-2.5 transition-colors"
-          >
-            New Patient
-          </button>
+           <Link
+          href="/patient-registration"
+        className="block text-center w-full rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium text-sm py-2.5 transition-colors"
+        >
+        New Patient
+          </Link>
 
           <button
             type="button"
@@ -193,6 +214,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
 
           <button
             type="button"
+            onClick={logout}
             className="flex items-center gap-3 w-full rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
           >
             <LogOutIcon />
@@ -333,6 +355,18 @@ function BMICalculatorIcon() {
 function PrescriptionIcon() {
   return (
     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+
+function PrescriptionIcon() {
+  return (
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
       <polyline points="14 2 14 8 20 8" />
       <line x1="16" y1="13" x2="8" y2="13" />

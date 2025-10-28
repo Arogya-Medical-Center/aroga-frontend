@@ -18,37 +18,39 @@ export default function DoctorForgotPasswordPage() {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden" data-auth-page>
       {/* Left Side - Image Section */}
       <div className="hidden lg:flex lg:w-1/2 bg-gray-100 relative">
         <div className="absolute top-8 left-8 flex items-center gap-2 z-20">
         </div>
         
         <div className="relative w-full h-full p-8">
-          <div className="relative w-full h-full border-8 rounded-lg overflow-hidden" style={{ borderColor: '#E8EAED' }}>
-            <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/20">
-              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-lg px-8">
+          <div className="relative w-full h-full rounded-lg overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-2xl px-8" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}>
                 Provide trusted<br />
                 medical<br />
                 opinions<br />
                 anywhere.
               </h1>
             </div>
-            <Image 
-              src="/doctor.jpg" 
-              alt="Doctor consultation" 
-              fill
-              className="object-cover"
-              priority
-            />
+            <video 
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="/doctor.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
 
       </div>
 
       {/* Right Side - Forgot Password Form */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-white">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex px-8 py-8 bg-white overflow-y-auto">
+        <div className="w-full max-w-md mx-auto">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8">
             <div className="w-10 h-10 bg-brand rounded-lg flex items-center justify-center">
@@ -68,38 +70,7 @@ export default function DoctorForgotPasswordPage() {
                 Enter your details and we&apos;ll send you reset instructions.
               </p>
 
-              {/* Verification Method Selection */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Verification Method
-                </label>
-                <div className="flex gap-4">
-                  <label className="flex items-center flex-1 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                    <input
-                      type="radio"
-                      name="verification"
-                      value="email"
-                      checked={verificationMethod === 'email'}
-                      onChange={(e) => setVerificationMethod(e.target.value as 'email')}
-                      className="w-4 h-4 border-gray-300"
-                      style={{ accentColor: '#3E7FA6' }}
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700">Email</span>
-                  </label>
-                  <label className="flex items-center flex-1 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                    <input
-                      type="radio"
-                      name="verification"
-                      value="license"
-                      checked={verificationMethod === 'license'}
-                      onChange={(e) => setVerificationMethod(e.target.value as 'license')}
-                      className="w-4 h-4 border-gray-300"
-                      style={{ accentColor: '#3E7FA6' }}
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700">License</span>
-                  </label>
-                </div>
-              </div>
+             
 
               {/* Forgot Password Form */}
               <form onSubmit={handleSubmit} className="space-y-5">

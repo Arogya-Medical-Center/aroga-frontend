@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
 
 export default function TopNav({ user, className }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
 
   const defaultUser = {
     name: "Dr. Admin",
@@ -70,6 +72,7 @@ export default function TopNav({ user, className }: Props) {
             type="button"
             aria-label="Notifications"
             className="relative p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+            onClick={() => router.push("/notification")}
           >
             <BellIcon />
             <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />

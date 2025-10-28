@@ -3,9 +3,13 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function AdminLoginPage() {
-  const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('admin');
+  const router = useRouter();
+  const { login } = useAuth();
+  const [userType, setUserType] = useState<'doctor' | 'admin'>('admin');
   const [email, setEmail] = useState('');
   const [adminId, setAdminId] = useState('');
   const [password, setPassword] = useState('');
@@ -13,44 +17,51 @@ export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loginMethod, setLoginMethod] = useState<'email' | 'adminId'>('email');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log({ userType, email, adminId, password, rememberMe, loginMethod });
+    // Use auth context login
+    const identifier = loginMethod === 'email' ? email : adminId;
+    const success = await login(identifier, password, 'admin');
+    if (success) {
+      console.log('Login successful');
+      // Router will handle redirect automatically via AuthContext
+    }
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden" data-auth-page>
       {/* Left Side - Image Section */}
       <div className="hidden lg:flex lg:w-1/2 bg-gray-100 relative">
         <div className="absolute top-8 left-8 flex items-center gap-2 z-20">
         </div>
         
         <div className="relative w-full h-full p-8">
-          <div className="relative w-full h-full border-8 rounded-lg overflow-hidden" style={{ borderColor: '#E8EAED' }}>
-            <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/20">
-              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-lg px-8">
+          <div className="relative w-full h-full rounded-lg overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-2xl px-8" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}>
                 Manage and<br />
                 oversee<br />
                 healthcare<br />
                 excellence.
               </h1>
             </div>
-            <Image 
-              src="/doctor.jpg" 
-              alt="Healthcare management" 
-              fill
-              className="object-cover"
-              priority
-            />
+            <video 
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="/admin2.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
 
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-white">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex px-8 py-8 bg-white overflow-y-auto">
+        <div className="w-full max-w-md mx-auto">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8">
             <div className="w-10 h-10 bg-brand rounded-lg flex items-center justify-center">
@@ -63,17 +74,11 @@ export default function AdminLoginPage() {
 
           {/* Rounded Box Container */}
           <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-8">
-          <h2 className="text-4xl font-bold text-gray-900 mb-2">Admin Sign In</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-2">Staff Sign In</h2>
           <p className="text-gray-600 mb-8">Secure access to system management.</p>
 
           {/* User Type Tabs */}
           <div className="flex gap-2 mb-6">
-            <Link
-              href="/auth/login/patient"
-              className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 text-center"
-            >
-              Patient
-            </Link>
             <Link
               href="/auth/login/doctor"
               className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 text-center"
@@ -84,7 +89,7 @@ export default function AdminLoginPage() {
               type="button"
               className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-brand text-white"
             >
-              Admin
+              Staff
             </button>
           </div>
 
@@ -102,7 +107,7 @@ export default function AdminLoginPage() {
                   checked={loginMethod === 'email'}
                   onChange={(e) => setLoginMethod(e.target.value as 'email')}
                   className="w-4 h-4 border-gray-300"
-                  style={{ accentColor: '#3E7FA6' }}
+                  style={{ accentColor: '#10B981' }}
                 />
                 <span className="ml-2 text-sm font-medium text-gray-700">Email</span>
               </label>
@@ -114,9 +119,9 @@ export default function AdminLoginPage() {
                   checked={loginMethod === 'adminId'}
                   onChange={(e) => setLoginMethod(e.target.value as 'adminId')}
                   className="w-4 h-4 border-gray-300"
-                  style={{ accentColor: '#3E7FA6' }}
+                  style={{ accentColor: '#10B981' }}
                 />
-                <span className="ml-2 text-sm font-medium text-gray-700">Admin ID</span>
+                <span className="ml-2 text-sm font-medium text-gray-700">Staff ID</span>
               </label>
             </div>
           </div>
@@ -199,9 +204,7 @@ export default function AdminLoginPage() {
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <Link href="/auth/forgot-password/admin" className="text-sm text-brand hover:text-brand-hover font-medium">
-                Forgot Password?
-              </Link>
+              
             </div>
 
             {/* Sign In Button */}
@@ -225,13 +228,7 @@ export default function AdminLoginPage() {
             </div>
           </div>
 
-          {/* Contact Support Link */}
-          <p className="text-center text-sm text-gray-600 mt-6">
-            Need help?{' '}
-            <Link href="/support" className="text-brand hover:text-brand-hover font-medium">
-              Contact Support
-            </Link>
-          </p>
+        
           </div>
           {/* End of Rounded Box Container */}
         </div>

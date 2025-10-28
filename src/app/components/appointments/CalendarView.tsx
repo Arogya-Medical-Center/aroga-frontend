@@ -47,7 +47,13 @@ export default function CalendarView({
     setCurrentWeekStart(newDate);
   };
 
-  const formatDate = (date: Date) => date.toISOString().split('T')[0];
+  // Use local date string (YYYY-MM-DD) to avoid UTC shift that can show the wrong day
+  const formatDate = (date: Date) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  };
 
   return (
     <div className="p-6 bg-white shadow-md rounded-xl" data-name="calendar-view">
@@ -61,7 +67,7 @@ export default function CalendarView({
               e.preventDefault();
               goToPreviousWeek();
             }}
-            className="px-3 py-1 border rounded-md hover:bg-gray-100"
+            className="px-3 py-1  rounded-md hover:bg-gray-100"
           >
             ◀
           </button>
@@ -77,7 +83,7 @@ export default function CalendarView({
               e.preventDefault();
               goToNextWeek();
             }}
-            className="px-3 py-1 border rounded-md hover:bg-gray-100"
+            className="px-3 py-1  rounded-md hover:bg-gray-100"
           >
             ▶
           </button>
@@ -95,7 +101,7 @@ export default function CalendarView({
             <div
               key={index}
               className={`border rounded-lg p-3 min-h-[180px] transition ${
-                isToday ? 'bg-blue-50 border-blue-400' : 'bg-white border-gray-200'
+                isToday ? 'bg-blue-100 border-blue-400' : 'bg-green-100 border-gray-400'
               }`}
             >
               {/* Date header */}
@@ -117,12 +123,12 @@ export default function CalendarView({
                       }}
                       className={`p-2 rounded-md cursor-pointer text-xs ${
                         apt.status === 'scheduled'
-                          ? 'bg-green-100 hover:bg-green-200'
+                          ? 'bg-green-200 hover:bg-green-300'
                           : apt.status === 'pending'
-                          ? 'bg-yellow-100 hover:bg-yellow-200'
+                          ? 'bg-yellow-200 hover:bg-yellow-300'
                           : apt.status === 'completed'
-                          ? 'bg-blue-100 hover:bg-blue-200'
-                          : 'bg-gray-100 hover:bg-gray-200'
+                          ? 'bg-blue-200 hover:bg-blue-300'
+                          : 'bg-red-200 hover:bg-red-300'
                       }`}
                     >
                       <div className="font-medium truncate text-black">{apt.patientName}</div>

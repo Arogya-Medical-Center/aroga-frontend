@@ -31,8 +31,31 @@ export function AppointmentProvider({ children }: { children: ReactNode }) {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    setAppointments(getInitialAppointments());
+    try {
+      const saved = typeof window !== 'undefined' ? window.localStorage.getItem('appointments') : null;
+      if (saved) {
+        setAppointments(JSON.parse(saved));
+      } else {
+        const initial = getInitialAppointments();
+        setAppointments(initial);
+      }
+    } catch (err) {
+      // fallback to defaults on any error
+      setAppointments(getInitialAppointments());
+    }
   }, []);
+
+  // Persist appointments to localStorage whenever they change
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('appointments', JSON.stringify(appointments));
+      }
+    } catch (err) {
+      // ignore storage errors
+      console.warn('Failed to save appointments to localStorage', err);
+    }
+  }, [appointments]);
 
   const handleAddAppointment = (appointmentData: any) => {
     const newAppointment = {

@@ -1,6 +1,6 @@
 'use client';
 
-type AppointmentStatus = 'scheduled' | 'pending' | 'completed' | 'noshow' | 'cancelled';
+type AppointmentStatus = 'scheduled' | 'pending' | 'completed' | 'cancelled';
 
 interface StatusBadgeProps {
   status: AppointmentStatus;
@@ -15,7 +15,7 @@ function StatusBadge({ status }: StatusBadgeProps) {
       scheduled: { label: 'Scheduled', className: 'status-scheduled', icon: 'check-circle' },
       pending: { label: 'Pending', className: 'status-pending', icon: 'clock' },
       completed: { label: 'Completed', className: 'status-completed', icon: 'check-circle-2' },
-      noshow: { label: 'No-show', className: 'status-noshow', icon: 'x-circle' },
+   
       cancelled: { label: 'Cancelled', className: 'status-cancelled', icon: 'ban' }
     };
 
