@@ -15,10 +15,13 @@ export default function ConditionalLayout({ children }: { children: React.ReactN
     return <>{children}</>;
   }
 
+  // Cast Sidebar to a React component type to satisfy JSX typing when Sidebar's export has an incorrect signature
+  const SidebarComponent = Sidebar as unknown as React.ComponentType<any>;
+
   // For all other routes, render with Sidebar and TopNav
   return (
     <div className="flex h-screen">
-      <Sidebar />
+      <SidebarComponent />
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopNav />
         <main className="flex-1 bg-neutral-50 p-6 overflow-y-auto">

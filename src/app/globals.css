@@ -7,7 +7,7 @@
   --brand-hover: #356882;
 }
 
-@theme inline {
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -50,6 +50,8 @@ body {
 
 .hover\:text-brand-hover:hover {
   color: var(--brand-hover);
+}
+
 /* Make calendar & appointment UI text black only inside these components */
 [data-name="calendar-view"],
 [data-name="calendar"],
