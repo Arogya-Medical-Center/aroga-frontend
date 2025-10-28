@@ -4,6 +4,7 @@ import { AppointmentContext } from '../../contexts/AppointmentContext';
 type StaticAppointment = {
   name: string;
   doctor: string;
+  date: string;
   time: string;
   status: string;
 };
@@ -16,7 +17,7 @@ export default function AppointmentTable() {
 
   const getBadgeColor = (status: string) => {
     switch (status) {
-      case "Confirmed":
+      case "Scheduled":
         return "bg-green-100 text-green-700";
       case "Pending":
         return "bg-yellow-100 text-yellow-700";
@@ -62,10 +63,12 @@ export default function AppointmentTable() {
       .map((a: any) => ({
         name: a.patientName || a.name || '-',
         doctor: a.doctorName || a.doctor || '-',
+        date: a.date || '',
         time: formatTime(a.time, a.date),
         status: prettyStatus(a.status)
       } as StaticAppointment));
   }, [allAppointments]);
+  
 
   return (
     <div className="bg-white rounded-2xl p-5 shadow-md">
@@ -76,6 +79,7 @@ export default function AppointmentTable() {
             <tr className="bg-gradient-to-r from-green-100 to-green-50">
               <th className="text-left py-4 px-4 font-semibold text-gray-700">Patient Name</th>
               <th className="text-left py-4 px-4 font-semibold text-gray-700">Doctor</th>
+              <th className="text-left py-4 px-4 font-semibold text-gray-700">Date</th>
               <th className="text-left py-4 px-4 font-semibold text-gray-700">Time</th>
               <th className="text-left py-4 px-4 font-semibold text-gray-700">Status</th>
             </tr>
@@ -91,9 +95,10 @@ export default function AppointmentTable() {
                   key={idx}
                   className={`border-b border-gray-200 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-green-50 transition`}
                 >
-                  <td className="py-5 px-4 rounded-l-xl">{a.name}</td>
-                  <td className="py-4 px-4">{a.doctor}</td>
-                  <td className="py-4 px-4">{a.time}</td>
+                  <td className="py-5 px-4 rounded-l-xl text-black">{a.name}</td>
+                  <td className="py-4 px-4 text-black">{a.doctor}</td>
+                  <td className="py-4 px-4 text-black">{a.date}</td>
+                  <td className="py-4 px-4 text-black">{a.time}</td>
                   <td className="py-4 px-4 rounded-r-xl">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-medium shadow-sm ${getBadgeColor(a.status)}`}
