@@ -47,6 +47,17 @@ export default function Sidebar({ user, navItems, className }: Props) {
       active: true,
     },
     {
+    id: "registration",
+    label: "Patient Registration",
+    icon: <PatientsIcon />,
+    href: "/patient-registration",
+  },
+  {
+    id: "profile",
+    label: "Patient Profile",
+    icon: <DashboardIcon />,
+    href: "/patient-profile",
+  },
       id: "bmi-calculator",
       label: "BMI Calculator",
       icon: <BMICalculatorIcon />,
