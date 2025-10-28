@@ -173,8 +173,8 @@ export default function BMICalculator() {
                 stroke="currentColor"
                 strokeWidth="2"
               >
-                <rect x="4" y="2" width="17" height="20" rx="2" />
-                <rect x="7" y="5" width="11" height="4" rx="1" />
+                <rect x="4" y="2" width="16" height="20" rx="2" />
+                <rect x="7" y="5" width="10" height="4" rx="1" />
                 <rect x="7" y="11" width="3" height="3" rx="0.5" />
                 <rect x="11" y="11" width="3" height="3" rx="0.5" />
                 <rect x="15" y="11" width="3" height="3" rx="0.5" />
@@ -215,7 +215,7 @@ export default function BMICalculator() {
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
                 placeholder="e.g., 25"
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-300 text-gray-700 font-medium text-base"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-500 placeholder:font-medium"
               />
             </div>
 
@@ -236,9 +236,9 @@ export default function BMICalculator() {
                 onChange={(e) =>
                   setSex(e.target.value as "male" | "female" | "")
                 }
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none text-gray-700 font-medium text-base"
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none text-gray-400"
               >
-                <option value="" className="text-gray-400">
+                <option value="" className="text-gray-500">
                   Select sex
                 </option>
                 <option value="male">Male</option>
@@ -264,9 +264,9 @@ export default function BMICalculator() {
                   value={height}
                   onChange={(e) => setHeight(e.target.value)}
                   placeholder="e.g., 170"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-500 text-gray-800 font-medium text-base"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-500 placeholder:font-medium"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-semibold">
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
                   cm
                 </span>
               </div>
@@ -290,9 +290,9 @@ export default function BMICalculator() {
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
                   placeholder="e.g., 70"
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400 text-gray-700 font-medium text-base"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none placeholder:text-gray-400 placeholder:font-medium"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm font-semibold">
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
                   kg
                 </span>
               </div>

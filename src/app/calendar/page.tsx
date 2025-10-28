@@ -8,20 +8,26 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import { AppointmentContext } from '../contexts/AppointmentContext';
 
 export default function Calendar() {
-  const {
-    appointments,
-    showModal,
-    setShowModal,
-    showDetails,
-    setShowDetails,
-    selectedAppointment,
-    setSelectedAppointment,
-    handleAddAppointment,
-    handleEditAppointment,
-    handleDeleteAppointment,
-    openEditModal,
-    openDetailsModal
-  } = useContext(AppointmentContext) as any;
+  const context = useContext(AppointmentContext);
+
+if (!context) {
+  throw new Error('AppointmentContext must be used within a provider');
+}
+
+const {
+  appointments,
+  showModal,
+  setShowModal,
+  showDetails,
+  setShowDetails,
+  selectedAppointment,
+  setSelectedAppointment,
+  handleAddAppointment,
+  handleEditAppointment,
+  handleDeleteAppointment,
+  openEditModal,
+  openDetailsModal
+} = context;
 
   return (
     <ErrorBoundary>
