@@ -3,8 +3,11 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useRouter } from 'next/navigation';
 
 export default function DoctorLoginPage() {
+  const router = useRouter();
   const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('doctor');
   const [mobileEmail, setMobileEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,12 +18,38 @@ export default function DoctorLoginPage() {
     e.preventDefault();
     // Handle login logic here
     console.log({ userType, mobileEmail, password, rememberMe });
+    // Redirect to admin dashboard after successful login
+    router.push('/dashboard/admin');
   };
 
-  const handleGoogleSignIn = () => {
-    // Handle Google sign in logic here
-    console.log('Google sign in');
-  };
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log('Google login success:', tokenResponse);
+      
+      try {
+        const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        });
+        
+        const userData = await userInfo.json();
+        console.log('User data:', userData);
+        
+        localStorage.setItem('user', JSON.stringify({
+          name: userData.name,
+          email: userData.email,
+          picture: userData.picture,
+          role: 'doctor'
+        }));
+        
+        router.push('/dashboard/admin');
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    },
+    onError: (error) => {
+      console.error('Google login failed:', error);
+    },
+  });
 
   return (
     <div className="flex h-screen overflow-hidden" data-auth-page>
@@ -73,16 +102,6 @@ export default function DoctorLoginPage() {
 
           {/* User Type Tabs */}
           <div className="flex gap-2 mb-6">
-            <Link
-              href="/auth/login/patient"
-              className={`flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors text-center ${
-                userType === 'patient'
-                  ? 'bg-brand text-white'
-                  : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50'
-              }`}
-            >
-              Patient
-            </Link>
             <button
               type="button"
               className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-brand text-white"
@@ -97,7 +116,7 @@ export default function DoctorLoginPage() {
                   : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50'
               }`}
             >
-              Admin
+              Staff
             </Link>
           </div>
 
@@ -188,7 +207,7 @@ export default function DoctorLoginPage() {
           {/* Google Sign In */}
           <button
             type="button"
-            onClick={handleGoogleSignIn}
+            onClick={() => googleLogin()}
             className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
