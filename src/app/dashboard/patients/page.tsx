@@ -370,36 +370,32 @@ export default function PatientManagementPage() {
         </>
       ) : (
         /* Consultation History View with Charts */
-        <div>
-          <button
-            onClick={() => setShowConsultationHistory(false)}
-            className="flex items-center gap-2 text-green-600 hover:text-green-700 font-medium mb-4"
-          >
-            <BackIcon />
-            Back to Patient List
-          </button>
+        <>
+          {/* Back Button */}
+          <div className="mb-6">
+            <button
+              onClick={() => setShowConsultationHistory(false)}
+              className="flex items-center gap-2 text-green-600 hover:text-green-700 font-medium"
+            >
+              <BackIcon />
+              Back to Patient List
+            </button>
+          </div>
 
           <div className="bg-white rounded-lg border border-neutral-200 p-6 mb-6">
-            <div className="flex items-start justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-neutral-900">{selectedPatient?.name}</h2>
-                <div className="mt-2 space-y-1 text-sm text-neutral-600">
-                  <p><span className="font-medium">Patient ID:</span> {selectedPatient?.id}</p>
-                  <p><span className="font-medium">Age:</span> {selectedPatient?.age} years</p>
-                  <p><span className="font-medium">Gender:</span> {selectedPatient?.gender}</p>
-                  <p><span className="font-medium">Contact:</span> {selectedPatient?.contact}</p>
-                  <p><span className="font-medium">Primary Illness:</span> {selectedPatient?.primaryIllness}</p>
-                  {selectedPatient?.height && (
-                    <p><span className="font-medium">Height:</span> {selectedPatient.height} cm</p>
-                  )}
-                </div>
-              </div>
-              <button className="text-green-600 hover:text-green-700 font-medium flex items-center gap-1">
-                <EditIcon />
-                Edit Profile
-              </button>
+            {/* Patient Header */}
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-neutral-900">
+                {selectedPatient?.name}
+              </h2>
+            </div>
+
+            {/* Patient Profile Tabs */}
+            <div className="border-t border-neutral-200 pt-4">
+              <PatientProfileTabs patient={selectedPatient} />
             </div>
           </div>
+
 
           {/* Health Trends Charts */}
           <div className="bg-white rounded-lg border border-neutral-200 p-6 mb-6">
@@ -619,11 +615,211 @@ export default function PatientManagementPage() {
               ))}
             </div>
           </div>
+        </>
+      )}
+    </div>
+  );
+}
+function PatientProfileTabs({ patient }: { patient: any }) {
+  const [tab, setTab] = useState<"personal" | "medical" | "visits" | "prescriptions">("personal");
+  const [isEditing, setIsEditing] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [editedPatient, setEditedPatient] = useState(patient);
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditedPatient(patient); // Reset to original values
+  };
+
+  const handleSave = () => {
+    // Here you would typically make an API call to save the data
+    // For now, we'll just simulate a successful save
+    setIsEditing(false);
+    setShowSuccessMessage(true);
+    
+    // Hide success message after 3 seconds
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 3000);
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setEditedPatient({ ...editedPatient, [field]: value });
+  };
+
+  return (
+    <div>
+      {/* Tabs Header */}
+      <div className="flex gap-6 border-b mb-4">
+        {[
+          { id: "personal", label: "Personal Details" },
+          { id: "medical", label: "Medical History" },
+          { id: "visits", label: "Visit History" },
+          { id: "prescriptions", label: "Prescriptions" },
+        ].map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id as any)}
+            className={`pb-2 ${
+              tab === t.id
+                ? "border-b-2 border-green-600 text-green-700 font-semibold"
+                : "text-gray-500"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* TAB CONTENT */}
+      {tab === "personal" && (
+        <div>
+          {/* Success Message */}
+          {showSuccessMessage && (
+            <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-800 rounded-lg flex items-center gap-2">
+              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="font-medium">Patient details updated successfully!</span>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-md font-semibold text-neutral-900">Personal Information</h4>
+            {!isEditing && (
+              <button 
+                onClick={handleEdit}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+              >
+                <EditIcon />
+                Edit Details
+              </button>
+            )}
+          </div>
+
+          {!isEditing ? (
+            <div className="space-y-2 text-sm">
+              <p><b>Name:</b> {editedPatient.name}</p>
+              <p><b>Patient ID:</b> {editedPatient.id}</p>
+              <p><b>Age:</b> {editedPatient.age}</p>
+              <p><b>Gender:</b> {editedPatient.gender}</p>
+              <p><b>Contact:</b> {editedPatient.contact}</p>
+              <p><b>Doctor:</b> {editedPatient.doctor}</p>
+            </div>
+          ) : (
+            <div>
+              <div className="space-y-4 text-sm mb-6">
+                <div>
+                  <label className="block font-semibold text-neutral-700 mb-1">Name:</label>
+                  <input
+                    type="text"
+                    value={editedPatient.name}
+                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-neutral-700 mb-1">Patient ID:</label>
+                  <input
+                    type="text"
+                    value={editedPatient.id}
+                    disabled
+                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg bg-neutral-100 text-neutral-500 cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-neutral-700 mb-1">Age:</label>
+                  <input
+                    type="number"
+                    value={editedPatient.age}
+                    onChange={(e) => handleInputChange('age', e.target.value)}
+                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-neutral-700 mb-1">Gender:</label>
+                  <select
+                    value={editedPatient.gender}
+                    onChange={(e) => handleInputChange('gender', e.target.value)}
+                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900"
+                  >
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-neutral-700 mb-1">Contact:</label>
+                  <input
+                    type="tel"
+                    value={editedPatient.contact}
+                    onChange={(e) => handleInputChange('contact', e.target.value)}
+                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-neutral-700 mb-1">Doctor:</label>
+                  <input
+                    type="text"
+                    value={editedPatient.doctor}
+                    onChange={(e) => handleInputChange('doctor', e.target.value)}
+                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900"
+                  />
+                </div>
+              </div>
+              
+              {/* Action Buttons at Bottom */}
+              <div className="flex gap-3 justify-end pt-4 border-t border-neutral-200">
+                <button 
+                  onClick={handleCancel}
+                  className="px-6 py-2 text-sm font-medium text-neutral-700 bg-white border-2 border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleSave}
+                  className="px-6 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {tab === "medical" && (
+        <div className="space-y-2 text-sm">
+          <p><b>Primary Illness:</b> {patient.primaryIllness}</p>
+          <p><b>Allergies:</b> None reported</p>
+          <p><b>Current Medications:</b> Amlodipine, Metformin</p>
+          <p><b>Notes:</b> Continue diet plan and regular monitoring.</p>
+        </div>
+      )}
+
+      {tab === "visits" && (
+        <ul className="list-disc pl-6 text-sm space-y-1">
+          <li>2025-05-14 – Routine Check-up</li>
+          <li>2025-07-01 – Follow-up Appointment</li>
+          <li>2025-09-20 – Lab Results Review</li>
+        </ul>
+      )}
+
+      {tab === "prescriptions" && (
+        <div className="text-sm space-y-2">
+          <p><b>Latest Prescription:</b> Paracetamol 500mg – 3x daily</p>
+          <p><b>Previous:</b> Metformin 500mg BD (for Diabetes)</p>
+          <p><b>Duration:</b> 30 days</p>
         </div>
       )}
     </div>
   );
 }
+
 
 // Icons
 function SearchIcon() {
@@ -651,3 +847,4 @@ function EditIcon() {
     </svg>
   );
 }
+
