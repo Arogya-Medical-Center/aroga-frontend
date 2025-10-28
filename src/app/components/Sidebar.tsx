@@ -51,11 +51,14 @@ export default function Sidebar({ user, navItems, className }: Props) {
       label: "BMI Calculator",
       icon: <BMICalculatorIcon />,
       href: "/BMICalculator",
+    },
+    {
       id: "drug-inventory",
       label: "Drug Inventory",
       icon: <PillIcon />,
       href: "/dashboard/drug-inventory",
-    }
+    },
+    {
       id: "appointments-dashboard",
       label: "Appointments",
       icon: <PatientsIcon />,
@@ -130,23 +133,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-4 px-2">
           <ul className="space-y-1">
-            {nav.map((item) => (
-              <li key={item.id}>
-                <Link
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className={[
-                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                    item.active
-                      ? "bg-green-100 text-green-800"
-                      : "text-neutral-700 hover:bg-neutral-100",
-                  ].join(" ")}
-                >
-                  {item.icon}
-                  <span>{item.label}</span>
-                </Link>
-              </li>
-            ))}
+            
             {nav.map((item) => {
               const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href));
               return (
