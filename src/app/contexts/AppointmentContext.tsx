@@ -30,9 +30,35 @@ export function AppointmentProvider({ children }: { children: ReactNode }) {
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Load initial appointments from localStorage (if present) to persist across navigations/reloads.
   useEffect(() => {
+    try {
+      const raw = localStorage.getItem('appointments');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        // Basic validation: ensure it's an array
+        if (Array.isArray(parsed)) {
+          setAppointments(parsed);
+          return;
+        }
+      }
+    } catch (err) {
+      // ignore and fall back to defaults
+      console.error('AppointmentContext: failed to read from localStorage', err);
+    }
+
+    // fallback to seeded appointments
     setAppointments(getInitialAppointments());
   }, []);
+
+  // Persist appointments to localStorage whenever they change so they survive reloads.
+  useEffect(() => {
+    try {
+      localStorage.setItem('appointments', JSON.stringify(appointments));
+    } catch (err) {
+      console.error('AppointmentContext: failed to save to localStorage', err);
+    }
+  }, [appointments]);
 
   const handleAddAppointment = (appointmentData: any) => {
     const newAppointment = {
