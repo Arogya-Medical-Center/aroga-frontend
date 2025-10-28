@@ -1,6 +1,6 @@
 "use client";
 
-import { ClipboardCheck, MessageSquare } from "lucide-react";
+import { MessageSquare, Send } from "lucide-react";
 import { useState } from "react";
 
 const templates = [
@@ -31,12 +31,23 @@ const templates = [
 ];
 
 export default function ReminderTemplatesPage() {
-  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [openId, setOpenId] = useState<number | null>(null);
+  const [form, setForm] = useState({ name: "", date: "", time: "", message: "" });
+  const [sent, setSent] = useState(false);
 
-  const handleCopy = (msg: string, id: number) => {
-    navigator.clipboard.writeText(msg);
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 1500);
+  const handleOpen = (tpl: typeof templates[0]) => {
+    setOpenId(tpl.id);
+    setForm({ name: "", date: "", time: "", message: tpl.message });
+    setSent(false);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSend = () => {
+    setSent(true);
+    setTimeout(() => setOpenId(null), 1500);
   };
 
   return (
@@ -60,19 +71,78 @@ export default function ReminderTemplatesPage() {
                 <p className="text-gray-600 text-sm">{tpl.message}</p>
               </div>
               <button
-                className="ml-4 mt-2 bg-green-500 hover:bg-green-600 text-white rounded-full p-2 shadow transition"
-                onClick={() => handleCopy(tpl.message, tpl.id)}
-                aria-label="Copy message"
+                className="ml-4 mt-2 bg-green-500 hover:bg-green-600 text-white rounded-full p-2 shadow transition flex items-center gap-1"
+                onClick={() => handleOpen(tpl)}
+                aria-label="Send message"
               >
-                {copiedId === tpl.id ? (
-                  <ClipboardCheck className="text-white" size={20} />
-                ) : (
-                  <ClipboardCheck className="text-white opacity-70" size={20} />
-                )}
+                <Send size={20} />
+                <span className="hidden sm:inline">Send</span>
               </button>
             </div>
           ))}
         </div>
+        {/* Elegant Popup Modal */}
+        {openId !== null && (
+          <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-30">
+            <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative animate-fadeIn">
+              <button
+                className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-xl"
+                onClick={() => setOpenId(null)}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <h2 className="text-xl font-bold text-green-700 mb-4 flex items-center gap-2">
+                <MessageSquare className="text-green-500" size={22} />
+                Send Reminder
+              </h2>
+              <form className="space-y-4" onSubmit={e => {e.preventDefault(); handleSend();}}>
+                <input
+                  type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="Patient Name"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-400 focus:outline-none"
+                  required
+                />
+                <input
+                  type="date"
+                  name="date"
+                  value={form.date}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-400 focus:outline-none"
+                  required
+                />
+                <input
+                  type="time"
+                  name="time"
+                  value={form.time}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-400 focus:outline-none"
+                  required
+                />
+                <textarea
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
+                  rows={4}
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-400 focus:outline-none"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg py-2 mt-2 shadow"
+                >
+                  Send
+                </button>
+              </form>
+              {sent && (
+                <div className="mt-4 text-green-600 text-center font-semibold">Message sent!</div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

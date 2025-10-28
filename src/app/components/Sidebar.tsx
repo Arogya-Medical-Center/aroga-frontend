@@ -61,6 +61,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
       href: "/patient-profile",
     },
     {
+
       id: "bmi-calculator",
       label: "BMI Calculator",
       icon: <BMICalculatorIcon />,
