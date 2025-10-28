@@ -47,7 +47,14 @@ export default function CalendarView({
     setCurrentWeekStart(newDate);
   };
 
-  const formatDate = (date: Date) => date.toISOString().split('T')[0];
+  //const formatDate = (date: Date) => date.toISOString().split('T')[0];
+  const formatDate = (date: Date) => {
+    // use local date components to avoid UTC shifts from toISOString()
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  };
 
   return (
     <div className="p-6 bg-white shadow-md rounded-xl" data-name="calendar-view">
