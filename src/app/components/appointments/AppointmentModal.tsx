@@ -68,7 +68,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
             <div className="icon-x text-xl"></div>
           </button>
           <div className="p-6 border-b border-[var(--border-color)]">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between text-2xl font-bold text-black">
               <h2>{appointment ? 'Edit Appointment' : 'New Appointment'}</h2>
               <button onClick={onClose} className="text-black hover:text-black">
                 <div className="icon-x text-xl"></div>
@@ -79,74 +79,72 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
           <form onSubmit={handleSubmit} className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2 text-black">Patient Name</label>
+                <label className="block text-sm font-bold mb-2 text-black">Patient Name</label>
                 <input
                   type="text"
                   required
                   value={formData.patientName}
                   onChange={(e) => setFormData({ ...formData, patientName: e.target.value })}
-                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-1 text-sm"
                   placeholder="Enter patient name"
                  
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2 text-black">Doctor Name</label>
+                <label className="block text-sm font-bold mb-2 text-black">Doctor Name</label>
                 <select
                   required
                   value={formData.doctorName}
                   onChange={(e) => setFormData({ ...formData, doctorName: e.target.value })}
-                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-1 text-sm"
                 >
-                  <option value="" className="text-black">Select doctor</option>
-                  <option value="Smith" className="text-black">Dr. Smith</option>
-                  <option value="Johnson" className="text-black">Dr. Johnson</option>
-                  <option value="Williams" className="text-black">Dr. Williams</option>
-                  <option value="Brown" className="text-black">Dr. Brown</option>
+                  <option value="Dr. Danushka Ranasingh" className="text-black">Dr. Danushka Ranasinghe</option>
+                  
+                 
                 </select>
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2 text-black">Date</label>
+                <label className="block text-sm font-bold mb-2 text-black">Date</label>
                 <input
                   type="date"
                   required
                   value={formData.date}
                   onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-1 text-sm"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2 text-black">Time</label>
+                <label className="block text-sm font-bold mb-2 text-black">Time</label>
                 <input
                   type="time"
                   required
                   value={formData.time}
                   onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-1 text-sm"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2 text-black">Duration (minutes)</label>
+                <label className="block text-sm font-bold mb-2 text-black">Duration (minutes)</label>
                 <input
                   type="number"
                   value={formData.duration}
                   onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-1 text-sm"
                   min="15"
                   step="15"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2 text-black">Appointment Type</label>
+                <label className="block text-sm font-bold mb-2 text-black">Appointment Type</label>
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-1 text-sm"
                 >
                   <option value="Check-up">Check-up</option>
                   <option value="Follow-up">Follow-up</option>
@@ -156,26 +154,26 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
               </div>
               
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-2 text-black">Status</label>
+                <label className="block text-sm font-bold mb-2 text-black">Status</label>
                 <select
                   value={formData.status}
                   onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-1 text-sm"
                 >
                   <option value="scheduled">Scheduled</option>
                   <option value="pending">Pending</option>
                   <option value="completed">Completed</option>
                   <option value="cancelled">Cancelled</option>
-                  <option value="noshow">No-show</option>
+                  <option value="noshow ">No-show</option>
                 </select>
               </div>
               
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium mb-2 text-black">Notes / Remarks</label>
+                <label className="block text-sm font-bold mb-2 text-black">Notes / Remarks</label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-3 py-2"
+                  className="input-field border border-gray-200 bg-gray-50 rounded-md px-20 py-1 text-sm"
                   rows={3}
                   placeholder="Add any additional notes..."
                 ></textarea>

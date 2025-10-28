@@ -60,7 +60,7 @@ export default function CalendarView({
     <div className="p-6 bg-white shadow-md rounded-xl" data-name="calendar-view">
       {/* Header with navigation */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">Weekly Schedule</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">Weekly Schedule</h2>
         <div className="flex items-center gap-3">
           <button
             onClick={(e: React.MouseEvent) => {
@@ -68,13 +68,13 @@ export default function CalendarView({
               e.preventDefault();
               goToPreviousWeek();
             }}
-            className="px-3 py-1 border rounded-md hover:bg-gray-100"
+            className="px-3 py-1  rounded-md  hover:bg-gray-100 "
           >
             ◀
           </button>
 
-          <span className="font-medium text-gray-700">
-            {weekDays[0].toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}{' '}-{' '}
+          <span className="font-bold text-gray-700">
+            {weekDays[0].toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}{' '} - {' '}
             {weekDays[6].toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           </span>
 
@@ -84,7 +84,7 @@ export default function CalendarView({
               e.preventDefault();
               goToNextWeek();
             }}
-            className="px-3 py-1 border rounded-md hover:bg-gray-100"
+            className="px-3 py-1  rounded-md hover:bg-gray-100"
           >
             ▶
           </button>
@@ -102,12 +102,12 @@ export default function CalendarView({
             <div
               key={index}
               className={`border rounded-lg p-3 min-h-[180px] transition ${
-                isToday ? 'bg-blue-50 border-blue-400' : 'bg-white border-gray-200'
+                isToday ? 'bg-blue-100 border-blue-400' : 'bg-green-50 border-green-200'
               }`}
             >
               {/* Date header */}
               <div className={`text-center mb-3 pb-2 border-b ${isToday ? 'border-blue-400' : 'border-gray-200'}`}>
-                <div className="text-xs text-gray-500">{day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                <div className="text-shadow-lg font-bold text-gray-500">{day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
                 <div className={`text-lg font-bold ${isToday ? 'text-blue-600' : 'text-gray-800'}`}>{day.getDate()}</div>
               </div>
 
@@ -124,20 +124,20 @@ export default function CalendarView({
                       }}
                       className={`p-2 rounded-md cursor-pointer text-xs ${
                         apt.status === 'scheduled'
-                          ? 'bg-green-100 hover:bg-green-200'
+                          ? 'bg-green-300 hover:bg-green-400'
                           : apt.status === 'pending'
-                          ? 'bg-yellow-100 hover:bg-yellow-200'
+                          ? 'bg-yellow-200 hover:bg-yellow-400'
                           : apt.status === 'completed'
-                          ? 'bg-blue-100 hover:bg-blue-200'
-                          : 'bg-gray-100 hover:bg-gray-200'
+                          ? 'bg-blue-400 hover:bg-blue-500'
+                          : 'bg-red-300 hover:bg-red-400'
                       }`}
                     >
-                      <div className="font-medium truncate text-black">{apt.patientName}</div>
+                      <div className="font-semibold truncate text-black">{apt.patientName}</div>
                       <div className="text-gray-600 mt-1">{apt.time}</div>
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-gray-400 text-center">No Appointments</p>
+                  <p className="font-medium text-xs text-gray-400 text-center">No Appointments</p>
                 )}
               </div>
             </div>
