@@ -132,7 +132,7 @@ export default function BMICalculator() {
     }
 
     const bmiValue = w / (h / 100) ** 2;
-    setBmi(bmiValue);
+    setBmi(parseFloat(bmiValue.toFixed(2)));
 
     const ageInYears = a;
     const isChild = ageInYears >= 2 && ageInYears < 20;
@@ -327,7 +327,7 @@ export default function BMICalculator() {
                   <h2 className="text-lg font-semibold mb-1">
                     Your BMI Result
                   </h2>
-                  <p className="text-5xl font-bold">{bmi}</p>
+                  <p className="text-5xl font-bold">{bmi.toFixed(2)}</p>
                 </div>
                 <div className="flex-shrink-0">
                   <BMIMeter
