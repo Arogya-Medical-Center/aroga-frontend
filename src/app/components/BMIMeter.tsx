@@ -146,21 +146,8 @@ export default function BMIMeter({ bmi, category, age, percentile }: BMIMeterPro
               </>
             ) : (
               <>
-                {/* Gradient definitions for smooth color transitions */}
+                {/* Shadow filter */}
                 <defs>
-                  <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#991b1b" />
-                    <stop offset="10%" stopColor="#c2410c" />
-                    <stop offset="20%" stopColor="#f59e0b" />
-                    <stop offset="30%" stopColor="#16a34a" />
-                    <stop offset="70%" stopColor="#16a34a" />
-                    <stop offset="80%" stopColor="#eab308" />
-                    <stop offset="85%" stopColor="#f87171" />
-                    <stop offset="90%" stopColor="#ef4444" />
-                    <stop offset="100%" stopColor="#dc2626" />
-                  </linearGradient>
-                  
-                  {/* Shadow filter */}
                   <filter id="arcShadow" x="-50%" y="-50%" width="200%" height="200%">
                     <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
                     <feOffset dx="0" dy="2" result="offsetblur"/>
@@ -174,51 +161,80 @@ export default function BMIMeter({ bmi, category, age, percentile }: BMIMeterPro
                   </filter>
                 </defs>
 
-                {/* Adult BMI arcs with rounded ends and shadows */}
+                {/* Adult BMI arcs with solid colors - no rounded edges */}
                 <g filter="url(#arcShadow)">
-                  {/* Severe Thinness */}
-                  <path d={arc(-90, -72)} fill="none" stroke="#991b1b" strokeWidth="28" strokeLinecap="round" opacity="0.95" />
+                  {/* Severe Thinness (<16) - Dark Red */}
+                  <path 
+                    d={arc(-90, -72)} 
+                    fill="none" 
+                    stroke="#991b1b" 
+                    strokeWidth="30" 
+                    strokeLinecap="butt"
+                  />
                   
-                  {/* Moderate Thinness */}
-                  <path d={arc(-72, -54)} fill="none" stroke="#c2410c" strokeWidth="28" strokeLinecap="round" opacity="0.95" />
+                  {/* Moderate Thinness (16-17) - Red Orange */}
+                  <path 
+                    d={arc(-72, -54)} 
+                    fill="none" 
+                    stroke="#c2410c" 
+                    strokeWidth="30" 
+                    strokeLinecap="butt"
+                  />
                   
-                  {/* Mild Thinness */}
-                  <path d={arc(-54, -36)} fill="none" stroke="#f59e0b" strokeWidth="28" strokeLinecap="round" opacity="0.95" />
+                  {/* Mild Thinness (17-18.5) - Orange */}
+                  <path 
+                    d={arc(-54, -36)} 
+                    fill="none" 
+                    stroke="#f59e0b" 
+                    strokeWidth="30" 
+                    strokeLinecap="butt"
+                  />
                   
-                  {/* Normal Weight - Larger and more prominent */}
-                  <path d={arc(-36, 36)} fill="none" stroke="#16a34a" strokeWidth="32" strokeLinecap="round" opacity="1" />
+                  {/* Normal Weight (18.5-25) - Green */}
+                  <path 
+                    d={arc(-36, 36)} 
+                    fill="none" 
+                    stroke="#16a34a" 
+                    strokeWidth="30" 
+                    strokeLinecap="butt"
+                  />
                   
-                  {/* Overweight */}
-                  <path d={arc(36, 54)} fill="none" stroke="#eab308" strokeWidth="28" strokeLinecap="round" opacity="0.95" />
+                  {/* Overweight (25-30) - Yellow */}
+                  <path 
+                    d={arc(36, 54)} 
+                    fill="none" 
+                    stroke="#eab308" 
+                    strokeWidth="30" 
+                    strokeLinecap="butt"
+                  />
                   
-                  {/* Obese Class I */}
-                  <path d={arc(54, 66)} fill="none" stroke="#f87171" strokeWidth="28" strokeLinecap="round" opacity="0.95" />
+                  {/* Obese Class I (30-35) - Light Red */}
+                  <path 
+                    d={arc(54, 66)} 
+                    fill="none" 
+                    stroke="#f87171" 
+                    strokeWidth="30" 
+                    strokeLinecap="butt"
+                  />
                   
-                  {/* Obese Class II */}
-                  <path d={arc(66, 78)} fill="none" stroke="#ef4444" strokeWidth="28" strokeLinecap="round" opacity="0.95" />
+                  {/* Obese Class II (35-40) - Red */}
+                  <path 
+                    d={arc(66, 78)} 
+                    fill="none" 
+                    stroke="#ef4444" 
+                    strokeWidth="30" 
+                    strokeLinecap="butt"
+                  />
                   
-                  {/* Obese Class III */}
-                  <path d={arc(78, 90)} fill="none" stroke="#dc2626" strokeWidth="28" strokeLinecap="round" opacity="0.95" />
+                  {/* Obese Class III (>40) - Dark Red */}
+                  <path 
+                    d={arc(78, 90)} 
+                    fill="none" 
+                    stroke="#dc2626" 
+                    strokeWidth="30" 
+                    strokeLinecap="butt"
+                  />
                 </g>
-
-                {/* Tick marks at boundaries for better readability */}
-                {[-90, -72, -54, -36, 36, 54, 66, 78, 90].map((tickAngle) => {
-                  const tickStart = polarToCartesian(cx, cy, r - 18, tickAngle);
-                  const tickEnd = polarToCartesian(cx, cy, r - 28, tickAngle);
-                  return (
-                    <line
-                      key={tickAngle}
-                      x1={tickStart.x}
-                      y1={tickStart.y}
-                      x2={tickEnd.x}
-                      y2={tickEnd.y}
-                      stroke="white"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      opacity="0.8"
-                    />
-                  );
-                })}
 
                 {/* Labels with better styling */}
                 <text x={label16.x} y={label16.y + 8} fontSize="12" fill="#374151" textAnchor="middle" fontWeight="700">16</text>
