@@ -67,13 +67,13 @@ export default function Sidebar({ user, navItems, className }: Props) {
     {
       id: "appointments-dashboard",
       label: "Appointments",
-      icon: <PatientsIcon />,
+      icon: <AppointmentsIcon />,
       href: "/appointments",
     },
     {
       id: "appointments-calendar",
       label: "Calendar",
-      icon: <PatientsIcon />,
+      icon: <CalendarIcon />,
       href: "/calendar",
     },
   ];
@@ -314,6 +314,48 @@ function BMICalculatorIcon() {
       <rect x="7" y="16" width="3" height="3" rx="0.5" />
       <rect x="11" y="16" width="3" height="3" rx="0.5" />
       <rect x="15" y="16" width="3" height="3" rx="0.5" />
+    </svg>
+  );
+}
+
+function AppointmentsIcon() {
+  return (
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M16 2v4" />
+      <path d="M8 2v4" />
+      <path d="M3 10h18" />
+      <path d="M12 13v5" />
+      <path d="M15 16.5l-3-2" />
+    </svg>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg
+      className="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="4" width="18" height="18" rx="2" />
+      <path d="M16 2v4" />
+      <path d="M8 2v4" />
+      <path d="M3 10h18" />
+      <rect x="7" y="12" width="3" height="3" rx="0.5" />
+      <rect x="14" y="12" width="3" height="3" rx="0.5" />
     </svg>
   );
 }

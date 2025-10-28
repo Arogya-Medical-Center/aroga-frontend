@@ -46,7 +46,7 @@ function AppointmentDetails({ appointment, onClose, onEdit, onDelete }: Appointm
           </div>*/}
             <div className="p-6 border-b border-[var(--border-color)]">
               <div className="flex items-center justify-between">
-                <h2 className="text-black text-lg font-semibold">Appointment Details</h2>
+                <h2 className="text-black text-2xl font-bold">Appointment Details</h2>
                 <button onClick={onClose} className="text-black hover:text-black">
                   <div className="icon-x text-xl"></div>
                 </button>
@@ -56,8 +56,8 @@ function AppointmentDetails({ appointment, onClose, onEdit, onDelete }: Appointm
           <div className="p-6">
             <div className="space-y-6">
               <div>
-                <h3 className="text-sm font-medium text-[var(--text-secondary)] mb-3">Patient Information</h3>
-                <div className="bg-gray-50 p-4 rounded-lg">
+
+                <div className="bg-green-300 p-4 rounded-lg">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-10 h-10 rounded-full bg-[var(--primary-color)] bg-opacity-10 flex items-center justify-center">
                       <div className="icon-user text-lg text-[var(--primary-color)]"></div>
@@ -71,54 +71,54 @@ function AppointmentDetails({ appointment, onClose, onEdit, onDelete }: Appointm
               </div>
               
               <div>
-                  <h3 className="text-sm font-medium text-black mb-3">Appointment Details</h3>
+                  
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center gap-3">
                     <div className="icon-stethoscope text-lg text-[var(--primary-color)]"></div>
                     <div>
-                      <div className="text-xs text-[var(--text-secondary)]">Doctor</div>
-                        <div className="text-black font-medium">Dr. {appointment.doctorName}</div>
+                      <div className="text-sm font-semibold text-[var(--text-secondary)]">Doctor</div>
+                        <div className="text-black text-sm font-medium">Dr. Danushka Ranasinghe</div>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
                     <div className="icon-calendar text-lg text-[var(--primary-color)]"></div>
                     <div>
-                      <div className="text-xs text-[var(--text-secondary)]">Date</div>
-                        <div className="text-black font-medium">{appointment.date}</div>
+                      <div className="text-sm font-semibold text-[var(--text-secondary)]">Date</div>
+                        <div className="text-black text-sm font-medium">{appointment.date}</div>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
                     <div className="icon-clock text-lg text-[var(--primary-color)]"></div>
                     <div>
-                      <div className="text-xs text-[var(--text-secondary)]">Time</div>
-                        <div className="text-black font-medium">{appointment.time}</div>
+                      <div className="text-sm font-semibold text-[var(--text-secondary)]">Time</div>
+                        <div className="text-black text-sm font-medium">{appointment.time}</div>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
                     <div className="icon-timer text-lg text-[var(--primary-color)]"></div>
                     <div>
-                      <div className=" text-xs text-[var(--text-secondary)]">Duration</div>
-                        <div className="text-xs text-black">Duration</div>
-                        <div className="text-black font-medium">{appointment.duration} min</div>
+                      <div className="text-sm font-semibold text-[var(--text-secondary)]">Duration</div>
+                        
+                        <div className="text-black text-sm font-medium">{appointment.duration} min</div>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
                     <div className="icon-file-text text-lg text-[var(--primary-color)]"></div>
                     <div>
-                      <div className="text-xs text-[var(--text-secondary)]">Type</div>
-                        <div className="text-black font-medium">{appointment.type}</div>
+                      <div className="text-sm font-semibold text-[var(--text-secondary)]">Type</div>
+                        <div className="text-black text-sm font-medium">{appointment.type}</div>
                     </div>
                   </div>
                   
                   <div className="flex items-center gap-3">
                     <div className="icon-activity text-lg text-[var(--primary-color)]"></div>
                     <div>
-                      <div className="text-xs text-[var(--text-secondary)]">Status</div>
-                      <div className="font-medium"><StatusBadge status={appointment.status as any} /></div>
+                      <div className="text-sm font-semibold text-[var(--text-secondary)]">Status</div>
+                      <div className="font-medium text-sm"><StatusBadge status={appointment.status as any} /></div>
                     </div>
                   </div>
                 </div>
@@ -126,23 +126,28 @@ function AppointmentDetails({ appointment, onClose, onEdit, onDelete }: Appointm
               
               {appointment.notes && (
                 <div>
-                    <h3 className="text-sm font-medium text-black mb-3">Notes</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg text-sm text-black">
+                    <h3 className="text-sm font-semibold text-black mb-3">Notes</h3>
+                    <div className="bg-green-200 p-4 rounded-lg text-sm text-black">
                     {appointment.notes}
                   </div>
                 </div>
               )}
             </div>
-            
+           
             <div className="flex gap-3 mt-6 pt-6 border-t border-[var(--border-color)]">
+              <button onClick={onClose} className="btn btn-secondary flex-1 flex items-center justify-center gap-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-black font-medium text-sm py-2.5 transition-colors">
+                Cancel
+              </button>
               <button onClick={onEdit} className="btn btn-primary flex-1 flex items-center justify-center gap-2 w-4 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium text-sm py-2.5 transition-colors">
                 <div className="icon-pencil text-base "></div>
                 Edit Appointment
               </button>
+               
               <button onClick={() => onDelete(appointment.id)} className="btn btn-danger flex-1 flex items-center justify-center gap-2 w-xs rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium text-sm py-2.5 transition-colors">
                 <div className="icon-trash-2 text-base "></div>
                 Delete
               </button>
+              
             </div>
           </div>
         </div>
