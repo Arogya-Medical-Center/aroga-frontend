@@ -138,18 +138,18 @@ export default function DoctorSignupPage() {
 
           {/* User Type Tabs */}
           <div className="flex gap-2 mb-6">
-            <Link
-              href="/auth/signup/patient"
-              className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 text-center"
-            >
-              Patient
-            </Link>
             <button
               type="button"
               className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-brand text-white"
             >
               Doctor
             </button>
+            <Link
+              href="/auth/login/admin"
+              className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 text-center"
+            >
+              Staff
+            </Link>
           </div>
 
           {/* Signup Form */}

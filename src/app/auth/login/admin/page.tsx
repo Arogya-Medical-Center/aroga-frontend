@@ -70,17 +70,11 @@ export default function AdminLoginPage() {
 
           {/* Rounded Box Container */}
           <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-8">
-          <h2 className="text-4xl font-bold text-gray-900 mb-2">Admin Sign In</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-2">Staff Sign In</h2>
           <p className="text-gray-600 mb-8">Secure access to system management.</p>
 
           {/* User Type Tabs */}
           <div className="flex gap-2 mb-6">
-            <Link
-              href="/auth/login/patient"
-              className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 text-center"
-            >
-              Patient
-            </Link>
             <Link
               href="/auth/login/doctor"
               className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 text-center"
@@ -91,7 +85,7 @@ export default function AdminLoginPage() {
               type="button"
               className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-brand text-white"
             >
-              Admin
+              Staff
             </button>
           </div>
 
@@ -123,7 +117,7 @@ export default function AdminLoginPage() {
                   className="w-4 h-4 border-gray-300"
                   style={{ accentColor: '#10B981' }}
                 />
-                <span className="ml-2 text-sm font-medium text-gray-700">Admin ID</span>
+                <span className="ml-2 text-sm font-medium text-gray-700">Staff ID</span>
               </label>
             </div>
           </div>

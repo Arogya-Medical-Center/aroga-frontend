@@ -102,16 +102,6 @@ export default function DoctorLoginPage() {
 
           {/* User Type Tabs */}
           <div className="flex gap-2 mb-6">
-            <Link
-              href="/auth/login/patient"
-              className={`flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors text-center ${
-                userType === 'patient'
-                  ? 'bg-brand text-white'
-                  : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50'
-              }`}
-            >
-              Patient
-            </Link>
             <button
               type="button"
               className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-brand text-white"
@@ -126,7 +116,7 @@ export default function DoctorLoginPage() {
                   : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50'
               }`}
             >
-              Admin
+              Staff
             </Link>
           </div>
 
