@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import ConditionalLayout from "./components/ConditionalLayout";
 import Sidebar from "./components/Sidebar";
 import TopNav from "./components/TopNav";
 import { AppointmentProvider } from './contexts/AppointmentContext';
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="antialiased overflow-hidden">
+        <ConditionalLayout>{children}</ConditionalLayout>
         <AppointmentProvider>
           <div className="flex h-screen">
             <Sidebar />
