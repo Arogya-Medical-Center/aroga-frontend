@@ -118,7 +118,7 @@ export default function BMICalculator() {
       childCat = "At risk of overweight (85th–<95th percentile)";
     else childCat = "Overweight (≥95th percentile)";
 
-    return { percentile: pct, childCat };
+    return { percentile: pct, childCat: childCat };
   };
 
   const calculateBMI = () => {
@@ -178,6 +178,9 @@ export default function BMICalculator() {
                 <rect x="7" y="11" width="3" height="3" rx="0.5" />
                 <rect x="11" y="11" width="3" height="3" rx="0.5" />
                 <rect x="15" y="11" width="3" height="3" rx="0.5" />
+                <rect x="7" y="16" width="3" height="3" rx="0.5" />
+                <rect x="11" y="16" width="3" height="3" rx="0.5" />
+                <rect x="15" y="16" width="3" height="3" rx="0.5" />
               </svg>
             </div>
             <div>

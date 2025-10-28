@@ -37,7 +37,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
       id: "dashboard",
       label: "Dashboard",
       icon: <DashboardIcon />,
-      href: "/dashboard",
+      href: "/dashboard/admin",
     },
     {
       id: "patients",
@@ -45,6 +45,18 @@ export default function Sidebar({ user, navItems, className }: Props) {
       icon: <PatientsIcon />,
       href: "/dashboard/patients",
       active: true,
+    },
+    {
+      id: "registration",
+      label: "Patient Registration",
+      icon: <PatientsIcon />,
+      href: "/patient-registration",
+    },
+    {
+      id: "profile",
+      label: "Patient Profile",
+      icon: <DashboardIcon />,
+      href: "/patient-profile",
     },
     {
       id: "bmi-calculator",
