@@ -6,7 +6,7 @@ interface Appointment {
 }
 
 const appointments: Appointment[] = [
-  { name: "Achini Dileka", doctor: "Dr. Dhanushka Perera", time: "10:00 AM", status: "Confirmed" },
+  { name: "Achini Dileka", doctor: "Dr. Dhanushka Perera", time: "10:00 AM", status: "Pending" },
   { name: "Saman Perera", doctor: "Dr. Dhanushka Perera", time: "11:30 AM", status: "Pending" },
   { name: "Piyath Ransara", doctor: "Dr. Dhanushka Perera", time: "02:15 PM", status: "Pending" },
   {name: "Sumana Rathnayaka", doctor: "Dr. Dhanushka Perera", time: "03:15 PM", status: "Pending" },
