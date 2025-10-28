@@ -97,11 +97,10 @@ export default function BMIMeter({ bmi, category, age, percentile }: BMIMeterPro
 
   const title = category.split('•')[0].trim().split('(')[0].trim();
 
-  // Calculate positions for labels at exact arc boundaries
+  // Calculate positions for labels at exact arc boundaries 
   const label16 = getLabelPosition(-90, 115);   // Start of gauge
   const label17 = getLabelPosition(-72, 115);   // End of severe/start of moderate thinness
   const label18_5 = getLabelPosition(-54, 115); // End of moderate/start of mild thinness
-  const labelStart18_5 = getLabelPosition(-36, 115); // Start of normal range
   const label25 = getLabelPosition(36, 115);    // End of normal/start of overweight
   const label30 = getLabelPosition(54, 115);    // End of overweight/start of obese I
   const label35 = getLabelPosition(66, 115);    // End of obese I/start of obese II
