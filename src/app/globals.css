@@ -24,3 +24,24 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Make calendar & appointment UI text black only inside these components */
+[data-name="calendar-view"],
+[data-name="calendar"],
+[data-name="dashboard-appointments"],
+[data-name="appointment-modal"],
+[data-name="appointment-details"] {
+  color: #000;
+  --text-secondary: #000000;
+  --text-primary: #000000;
+  --foreground: #000000;
+}
+
+/* Force descendant text to black (overrides Tailwind utility colors only inside these areas) */
+[data-name="calendar-view"] *,
+[data-name="calendar"] *,
+[data-name="dashboard-appointments"] *,
+[data-name="appointment-modal"] *,
+[data-name="appointment-details"] * {
+  color: #000 !important;
+}

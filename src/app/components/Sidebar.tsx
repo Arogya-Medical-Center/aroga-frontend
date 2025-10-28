@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 type NavItem = {
   id: string;
@@ -50,11 +51,28 @@ export default function Sidebar({ user, navItems, className }: Props) {
       label: "BMI Calculator",
       icon: <BMICalculatorIcon />,
       href: "/BMICalculator",
+      id: "drug-inventory",
+      label: "Drug Inventory",
+      icon: <PillIcon />,
+      href: "/dashboard/drug-inventory",
+    }
+      id: "appointments-dashboard",
+      label: "Appointments",
+      icon: <PatientsIcon />,
+      href: "/appointments",
+    },
+    {
+      id: "appointments-calendar",
+      label: "Calendar",
+      icon: <PatientsIcon />,
+      href: "/calendar",
     },
   ];
 
   const currentUser = user || defaultUser;
   const nav = navItems || defaultNavItems;
+
+  const pathname = usePathname();
 
   return (
     <>
@@ -129,6 +147,23 @@ export default function Sidebar({ user, navItems, className }: Props) {
                 </Link>
               </li>
             ))}
+            {nav.map((item) => {
+              const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href));
+              return (
+                <li key={item.id}>
+                  <a
+                    href={item.href}
+                    className={[
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                      isActive ? "bg-green-100 text-green-800" : "text-neutral-700 hover:bg-neutral-100",
+                    ].join(" ")}
+                  >
+                    {item.icon}
+                    <span>{item.label}</span>
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
@@ -198,6 +233,15 @@ function PatientsIcon() {
       <circle cx="9" cy="7" r="4" />
       <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+function PillIcon() {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M20.59 3.41a5 5 0 0 0-7.07 0L3.41 13.52a5 5 0 0 0 7.07 7.07l10.12-10.12a5 5 0 0 0 0-7.06z" />
+      <path d="M8.46 8.46l7.07 7.07" />
     </svg>
   );
 }
