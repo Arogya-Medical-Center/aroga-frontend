@@ -3,8 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --brand: #3E7FA6;
-  --brand-hover: #356882;
+  --brand: #10B981;
+  --brand-hover: #059669;
 }
 
 :root {
@@ -50,6 +50,27 @@ body {
 
 .hover\:text-brand-hover:hover {
   color: var(--brand-hover);
+}
+
+/* Dark text color for input fields in authentication pages only */
+[data-auth-page] input[type="text"],
+[data-auth-page] input[type="email"],
+[data-auth-page] input[type="password"],
+[data-auth-page] input[type="tel"],
+[data-auth-page] input[type="number"],
+[data-auth-page] select,
+[data-auth-page] textarea {
+  color: #111827;
+}
+
+[data-auth-page] input[type="text"]::placeholder,
+[data-auth-page] input[type="email"]::placeholder,
+[data-auth-page] input[type="password"]::placeholder,
+[data-auth-page] input[type="tel"]::placeholder,
+[data-auth-page] input[type="number"]::placeholder,
+[data-auth-page] select::placeholder,
+[data-auth-page] textarea::placeholder {
+  color: #9CA3AF;
 }
 
 /* Make calendar & appointment UI text black only inside these components */

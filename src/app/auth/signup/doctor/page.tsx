@@ -59,37 +59,39 @@ export default function DoctorSignupPage() {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden" data-auth-page>
       {/* Left Side - Image Section */}
       <div className="hidden lg:flex lg:w-1/2 bg-gray-100 relative">
         <div className="absolute top-8 left-8 flex items-center gap-2 z-20">
         </div>
         
         <div className="relative w-full h-full p-8">
-          <div className="relative w-full h-full border-8 rounded-lg overflow-hidden" style={{ borderColor: '#E8EAED' }}>
-            <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/20">
-              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-lg px-8">
+          <div className="relative w-full h-full rounded-lg overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <h1 className="text-5xl font-bold text-white text-center leading-tight drop-shadow-2xl px-8" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}>
                 Join our network<br />
                 of trusted<br />
                 medical<br />
                 professionals.
               </h1>
             </div>
-            <Image 
-              src="/doctor.jpg" 
-              alt="Doctor consultation" 
-              fill
-              className="object-cover"
-              priority
-            />
+            <video 
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="/doctor.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
 
       </div>
 
       {/* Right Side - Signup Form */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-white">
-        <div className="w-full max-w-md">
+      <div className="flex-1 flex px-8 py-8 bg-white overflow-y-auto">
+        <div className="w-full max-w-md mx-auto">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8">
             <div className="w-10 h-10 bg-brand rounded-lg flex items-center justify-center">
@@ -101,7 +103,7 @@ export default function DoctorSignupPage() {
           </div>
 
           {/* Rounded Box Container */}
-          <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-8 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-8">
           <h2 className="text-4xl font-bold text-gray-900 mb-2">Doctor Sign Up</h2>
           <p className="text-gray-600 mb-8">Join our network of healthcare professionals.</p>
 
@@ -230,7 +232,7 @@ export default function DoctorSignupPage() {
                   id="specialization"
                   value={specialization}
                   onChange={(e) => setSpecialization(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent appearance-none"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent appearance-none"
                   required
                 >
                   <option value="">Select specialization</option>
@@ -347,7 +349,7 @@ export default function DoctorSignupPage() {
                 checked={agreeToTerms}
                 onChange={(e) => setAgreeToTerms(e.target.checked)}
                 className="w-4 h-4 mt-1 border-gray-300 rounded focus:ring-brand"
-                style={{ accentColor: '#3E7FA6' }}
+                style={{ accentColor: '#10B981' }}
                 required
               />
               <label htmlFor="agree-terms" className="ml-2 text-sm text-gray-600">
