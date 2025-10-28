@@ -4,8 +4,9 @@ import { useState } from "react";
 export default function PatientProfile() {
   const [tab, setTab] = useState<"personal" | "medical" | "visits" | "prescriptions">("personal");
   const [isEditing, setIsEditing] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
-  // Patient data (mock demo info)
+  // Patient data (demo info)
   const [patient, setPatient] = useState({
     name: "Nethmini Jayasekara",
     dob: "2001-05-21",
@@ -26,14 +27,22 @@ export default function PatientProfile() {
 
   const handleSave = () => {
     setIsEditing(false);
-    alert("✅ Patient details updated successfully!");
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="relative min-h-screen bg-gray-50 p-8 transition-all duration-300">
       <h1 className="text-2xl font-bold mb-6 text-green-700">Patient Profile</h1>
 
-      <div className="bg-white p-6 rounded-xl shadow-md">
+      <div
+        className={`bg-white p-6 rounded-xl shadow-md transition-all duration-300 ${
+          showPopup ? "blur-sm" : ""
+        }`}
+      >
         {/* Tabs */}
         <div className="flex gap-6 border-b mb-4">
           {[
@@ -71,7 +80,7 @@ export default function PatientProfile() {
 
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="mt-4 bg-green-600 text-white px-4 py-2 rounded"
+                  className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
                 >
                   Edit Details
                 </button>
@@ -141,7 +150,7 @@ export default function PatientProfile() {
                   <button
                     type="button"
                     onClick={handleSave}
-                    className="bg-green-600 text-white px-4 py-2 rounded"
+                    className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
                   >
                     Save
                   </button>
@@ -206,6 +215,60 @@ export default function PatientProfile() {
           </div>
         )}
       </div>
+
+      {/* POPUP */}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm">
+          <div className="bg-white/90 p-8 rounded-2xl shadow-2xl text-center w-[90%] max-w-sm border border-green-100 animate-popup">
+            <div className="flex flex-col items-center">
+              <div className="bg-green-100 text-green-600 w-16 h-16 flex items-center justify-center rounded-full mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-8 h-8"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.5 12.75l6 6 9-13.5"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                Profile Updated!
+              </h2>
+              <p className="text-gray-500 text-sm mb-6">
+                The patient details have been successfully saved.
+              </p>
+              <button
+                onClick={handleClosePopup}
+                className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes popup {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        .animate-popup {
+          animation: popup 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 }

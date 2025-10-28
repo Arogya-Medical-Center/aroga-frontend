@@ -54,7 +54,7 @@ export default function PatientRegistration() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setShowPopup(true); // Show modal instead of alert
+    setShowPopup(true);
   };
 
   const handleClear = () => {
@@ -80,16 +80,14 @@ export default function PatientRegistration() {
   };
 
   return (
-    <div className="relative min-h-screen bg-gray-50 p-8">
-      {/* Page Title */}
+    <div className="relative min-h-screen bg-gray-50 p-8 transition-all duration-300">
       <h1 className="text-2xl font-bold mb-6 text-green-700">
         Patient Registration
       </h1>
 
-      {/* Registration Form */}
       <form
         onSubmit={handleSubmit}
-        className={`bg-white p-6 rounded-xl shadow-md space-y-6 transition-all ${
+        className={`bg-white p-6 rounded-xl shadow-md space-y-6 transition-all duration-300 ${
           showPopup ? "blur-sm" : ""
         }`}
       >
@@ -270,58 +268,55 @@ export default function PatientRegistration() {
 
       {/* ------------------- POPUP MODAL ------------------- */}
       {showPopup && (
-        <>
-          <div className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="bg-white p-8 rounded-xl shadow-lg text-center w-[90%] max-w-sm animate-fadeIn">
-              <div className="flex flex-col items-center">
-                <div className="bg-green-100 text-green-600 w-16 h-16 flex items-center justify-center rounded-full mb-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="w-8 h-8"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4.5 12.75l6 6 9-13.5"
-                    />
-                  </svg>
-                </div>
-                <h2 className="text-lg font-semibold text-gray-800 mb-2">
-                  Patient Registered!
-                </h2>
-                <p className="text-gray-500 text-sm mb-6">
-                  The patient has been successfully added to the system.
-                </p>
-                <button
-                  onClick={handleClosePopup}
-                  className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
+        <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm">
+          <div className="bg-white/90 p-8 rounded-2xl shadow-2xl text-center w-[90%] max-w-sm border border-green-100 animate-popup">
+            <div className="flex flex-col items-center">
+              <div className="bg-green-100 text-green-600 w-16 h-16 flex items-center justify-center rounded-full mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-8 h-8"
                 >
-                  Close
-                </button>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.5 12.75l6 6 9-13.5"
+                  />
+                </svg>
               </div>
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                Patient Registered!
+              </h2>
+              <p className="text-gray-500 text-sm mb-6">
+                The patient has been successfully added to the system.
+              </p>
+              <button
+                onClick={handleClosePopup}
+                className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
+              >
+                Close
+              </button>
             </div>
           </div>
-        </>
+        </div>
       )}
 
-      {/* Optional animation */}
       <style jsx>{`
-        @keyframes fadeIn {
+        @keyframes popup {
           from {
             opacity: 0;
-            transform: translateY(-10px);
+            transform: scale(0.9);
           }
           to {
             opacity: 1;
-            transform: translateY(0);
+            transform: scale(1);
           }
         }
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
+        .animate-popup {
+          animation: popup 0.3s ease-out;
         }
       `}</style>
     </div>

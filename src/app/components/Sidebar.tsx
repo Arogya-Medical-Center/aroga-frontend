@@ -47,12 +47,6 @@ export default function Sidebar({ user, navItems, className }: Props) {
       active: true,
     },
     {
-      id: "registration",
-      label: "Patient Registration",
-      icon: <PatientsIcon />,
-      href: "/patient-registration",
-    },
-    {
       id: "profile",
       label: "Patient Profile",
       icon: <DashboardIcon />,
@@ -169,12 +163,12 @@ export default function Sidebar({ user, navItems, className }: Props) {
 
         {/* Bottom Actions */}
         <div className="border-t border-neutral-300 p-4 space-y-3">
-          <button
-            type="button"
-            className="w-full rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium text-sm py-2.5 transition-colors"
-          >
-            New Patient
-          </button>
+           <Link
+          href="/patient-registration"
+        className="block text-center w-full rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium text-sm py-2.5 transition-colors"
+        >
+        New Patient
+          </Link>
 
           <button
             type="button"
