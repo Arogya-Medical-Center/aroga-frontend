@@ -3,7 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --brand: #3E7FA6;
+  --brand: #3e7fa6;
   --brand-hover: #356882;
 }
 
@@ -50,23 +50,24 @@ body {
 
 .hover\:text-brand-hover:hover {
   color: var(--brand-hover);
-/* Make calendar & appointment UI text black only inside these components */
-[data-name="calendar-view"],
-[data-name="calendar"],
-[data-name="dashboard-appointments"],
-[data-name="appointment-modal"],
-[data-name="appointment-details"] {
-  color: #000;
-  --text-secondary: #000000;
-  --text-primary: #000000;
-  --foreground: #000000;
-}
+  /* Make calendar & appointment UI text black only inside these components */
+  [data-name="calendar-view"],
+  [data-name="calendar"],
+  [data-name="dashboard-appointments"],
+  [data-name="appointment-modal"],
+  [data-name="appointment-details"] {
+    color: #000;
+    --text-secondary: #000000;
+    --text-primary: #000000;
+    --foreground: #000000;
+  }
 
-/* Force descendant text to black (overrides Tailwind utility colors only inside these areas) */
-[data-name="calendar-view"] *,
-[data-name="calendar"] *,
-[data-name="dashboard-appointments"] *,
-[data-name="appointment-modal"] *,
-[data-name="appointment-details"] * {
-  color: #000 !important;
+  /* Force descendant text to black (overrides Tailwind utility colors only inside these areas) */
+  [data-name="calendar-view"] *,
+  [data-name="calendar"] *,
+  [data-name="dashboard-appointments"] *,
+  [data-name="appointment-modal"] *,
+  [data-name="appointment-details"] * {
+    color: #000 !important;
+  }
 }
