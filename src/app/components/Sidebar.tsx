@@ -65,6 +65,12 @@ export default function Sidebar({ user, navItems, className }: Props) {
       href: "/BMICalculator",
     },
     {
+      id: "prescription-assistant",
+      label: "Prescription Assistant",
+      icon: <PillIcon />,
+      href: "/dashboard/prescription-assistant",
+    },
+    {
       id: "drug-inventory",
       label: "Drug Inventory",
       icon: <PillIcon />,
