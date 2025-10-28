@@ -93,8 +93,8 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
               
               <div>
                 <label className="block text-sm font-semibold mb-2 text-black">Doctor Name</label>
-                 <div className="text-black text-sm font-medium">Dr. Danushka Ranasinghe</div>
-                {/*<select
+                 {/*<div className="text-black text-sm font-medium">Dr. Danushka Ranasinghe</div>*/}
+                <select
                   required
                   value={formData.doctorName}
                   onChange={(e) => setFormData({ ...formData, doctorName: e.target.value })}
@@ -106,7 +106,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                   <option value="Johnson" className="text-black">Dr. Johnson</option>
                   <option value="Williams" className="text-black">Dr. Williams</option>
                   <option value="Brown" className="text-black">Dr. Brown</option>
-                </select>*/}
+                </select>
               </div>
               
               <div>
@@ -169,7 +169,7 @@ function AppointmentModal({ appointment, onClose, onSave }: AppointmentModalProp
                   <option value="pending" className="text-sm">Pending</option>
                   <option value="completed" className="text-sm">Completed</option>
                   <option value="cancelled" className="text-sm">Cancelled</option>
-                  <option value="noshow" className="text-sm">No-show</option>
+                
                 </select>
               </div>
               

@@ -135,7 +135,7 @@ function AppointmentDetails({ appointment, onClose, onEdit, onDelete }: Appointm
             </div>
            
             <div className="flex gap-3 mt-6 pt-6 border-t border-[var(--border-color)]">
-              <button onClick={onClose} className="btn btn-secondary flex-1 flex items-center justify-center gap-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-black font-medium text-sm py-2.5 transition-colors">
+              <button onClick={onClose} className="btn btn-secondary flex-1 flex items-center justify-center gap-2 rounded-lg bg-amber-200 hover:bg-amber-300 text-black font-medium text-sm py-2.5 transition-colors">
                 Cancel
               </button>
               <button onClick={onEdit} className="btn btn-primary flex-1 flex items-center justify-center gap-2 w-4 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium text-sm py-2.5 transition-colors">

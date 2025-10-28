@@ -34,7 +34,7 @@ export default function DashboardAppointmentsList() {
               setShowModal(true);
             }}
           >
-           + Add Appointment
+           Add Appointment
           </button>
         </div>
 
@@ -44,7 +44,7 @@ export default function DashboardAppointmentsList() {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="text-sm text-black">
+                <tr className="text-lg text-black">
                   <th className="py-2 text-black">Patient</th>
                   <th className="py-2 text-black">Doctor</th>
                   <th className="py-2 text-black">Date</th>
@@ -55,7 +55,7 @@ export default function DashboardAppointmentsList() {
               </thead>
               <tbody>
                 {appointments.map((apt: any) => (
-                  <tr key={apt.id} className="border-t">
+                  <tr key={apt.id} className="border-t text-sm">
                     <td className="py-2 text-black">{apt.patientName || '—'}</td>
                     <td className="py-2 text-black">{apt.doctorName || '—'}</td>
                     <td className="py-2 text-black">{apt.date || '—'}</td>
@@ -63,9 +63,9 @@ export default function DashboardAppointmentsList() {
                     <td className="py-2 text-black">{apt.status || 'scheduled'}</td>
                     <td className="py-2 text-black"> 
                       <div className="flex gap-2">
-                        <button className="btn btn-sm" onClick={() => openDetailsModal(apt)}>View</button>
-                        <button className="btn btn-sm" onClick={() => openEditModal(apt)}>Edit</button>
-                        <button className="btn btn-sm btn-danger" onClick={() => handleDeleteAppointment(apt.id)}>Delete</button>
+                        <button className="btn btn-sm text-blue-500" onClick={() => openDetailsModal(apt)}>View</button>
+                        <button className="btn btn-sm text-green-500" onClick={() => openEditModal(apt)}>Edit</button>
+                        <button className="btn btn-sm btn-danger text-red-500" onClick={() => handleDeleteAppointment(apt.id)}>Delete</button>
                       </div>
                     </td>
                   </tr>
