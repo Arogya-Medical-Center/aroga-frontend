@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "../contexts/AuthContext";
 
 type NavItem = {
   id: string;
@@ -25,6 +26,7 @@ type Props = {
 
 export default function Sidebar({ user, navItems, className }: Props) {
   const [open, setOpen] = useState(false);
+  const { logout, user: authUser, hasAccess } = useAuth();
 
   const defaultUser = {
     name: "Dr. Danushka Ranasinghe",
@@ -47,16 +49,35 @@ export default function Sidebar({ user, navItems, className }: Props) {
       active: true,
     },
     {
+      id: "registration",
+      label: "Patient Registration",
+      icon: <PatientsIcon />,
+      href: "/patient-registration",
+    },
+    {
       id: "profile",
       label: "Patient Profile",
       icon: <DashboardIcon />,
       href: "/patient-profile",
     },
     {
+
       id: "bmi-calculator",
       label: "BMI Calculator",
       icon: <BMICalculatorIcon />,
       href: "/BMICalculator",
+    },
+    {
+      id: "create-prescription",
+      label: "Create Prescription",
+      icon: <PrescriptionIcon />,
+      href: "/dashboard/create-prescription",
+    },
+    {
+      id: "prescription-assistant",
+      label: "Treatment Protocols",
+      icon: <PillIcon />,
+      href: "/dashboard/prescription-assistant",
     },
     {
       id: "drug-inventory",
@@ -79,7 +100,13 @@ export default function Sidebar({ user, navItems, className }: Props) {
   ];
 
   const currentUser = user || defaultUser;
-  const nav = navItems || defaultNavItems;
+  
+  // Filter nav items based on user role permissions
+  const filteredNavItems = (navItems || defaultNavItems).filter(item => 
+    hasAccess(item.href)
+  );
+  
+  const nav = filteredNavItems;
 
   const pathname = usePathname();
 
@@ -180,6 +207,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
 
           <button
             type="button"
+            onClick={logout}
             className="flex items-center gap-3 w-full rounded-lg px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
           >
             <LogOutIcon />
@@ -318,7 +346,7 @@ function BMICalculatorIcon() {
   );
 }
 
-function AppointmentsIcon() {
+function PrescriptionIcon() {
   return (
     <svg
       className="h-5 w-5"
@@ -329,33 +357,11 @@ function AppointmentsIcon() {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <rect x="3" y="4" width="18" height="18" rx="2" />
-      <path d="M16 2v4" />
-      <path d="M8 2v4" />
-      <path d="M3 10h18" />
-      <path d="M12 13v5" />
-      <path d="M15 16.5l-3-2" />
-    </svg>
-  );
-}
-
-function CalendarIcon() {
-  return (
-    <svg
-      className="h-5 w-5"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="4" width="18" height="18" rx="2" />
-      <path d="M16 2v4" />
-      <path d="M8 2v4" />
-      <path d="M3 10h18" />
-      <rect x="7" y="12" width="3" height="3" rx="0.5" />
-      <rect x="14" y="12" width="3" height="3" rx="0.5" />
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10 9 9 9 8 9" />
     </svg>
   );
 }

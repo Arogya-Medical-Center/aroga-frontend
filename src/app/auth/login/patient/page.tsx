@@ -3,9 +3,14 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function PatientLoginPage() {
-  const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('patient');
+  const router = useRouter();
+  const { login } = useAuth();
+  const [userType, setUserType] = useState<'doctor' | 'admin'>('admin');
   const [mobileEmail, setMobileEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -43,18 +48,40 @@ export default function PatientLoginPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
       // Handle login logic here
       console.log({ userType, mobileEmail, password, rememberMe });
+      // Redirect to dashboard after successful login
+      router.push('/dashboard/patients');
     }
   };
 
-  const handleGoogleSignIn = () => {
-    // Handle Google sign in logic here
-    console.log('Google sign in');
-  };
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log('Google login success:', tokenResponse);
+      
+      try {
+        // Fetch user info from Google
+        const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        });
+        
+        const userData = await userInfo.json();
+        console.log('User data:', userData);
+        
+        // Use the auth context login with Google user data - admin role
+        await login(userData.email, 'google-oauth', 'admin');
+        
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    },
+    onError: (error) => {
+      console.error('Google login failed:', error);
+    },
+  });
 
   return (
     <div className="flex h-screen overflow-hidden" data-auth-page>
@@ -228,7 +255,7 @@ export default function PatientLoginPage() {
           {/* Google Sign In */}
           <button
             type="button"
-            onClick={handleGoogleSignIn}
+            onClick={() => googleLogin()}
             className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">

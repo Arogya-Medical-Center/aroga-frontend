@@ -4,10 +4,12 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('admin');
+  const { login } = useAuth();
+  const [userType, setUserType] = useState<'doctor' | 'admin'>('admin');
   const [email, setEmail] = useState('');
   const [adminId, setAdminId] = useState('');
   const [password, setPassword] = useState('');
@@ -15,13 +17,15 @@ export default function AdminLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loginMethod, setLoginMethod] = useState<'email' | 'adminId'>('email');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log({ userType, email, adminId, password, rememberMe, loginMethod });
-    
-    // Route to admin dashboard after login
-    router.push('/dashboard/admin');
+    // Use auth context login
+    const identifier = loginMethod === 'email' ? email : adminId;
+    const success = await login(identifier, password, 'admin');
+    if (success) {
+      console.log('Login successful');
+      // Router will handle redirect automatically via AuthContext
+    }
   };
 
   return (
@@ -70,17 +74,11 @@ export default function AdminLoginPage() {
 
           {/* Rounded Box Container */}
           <div className="bg-white rounded-3xl shadow-lg border border-gray-200 p-8">
-          <h2 className="text-4xl font-bold text-gray-900 mb-2">Admin Sign In</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-2">Staff Sign In</h2>
           <p className="text-gray-600 mb-8">Secure access to system management.</p>
 
           {/* User Type Tabs */}
           <div className="flex gap-2 mb-6">
-            <Link
-              href="/auth/login/patient"
-              className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 text-center"
-            >
-              Patient
-            </Link>
             <Link
               href="/auth/login/doctor"
               className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-white text-gray-600 border border-gray-300 hover:bg-gray-50 text-center"
@@ -91,7 +89,7 @@ export default function AdminLoginPage() {
               type="button"
               className="flex-1 py-2.5 px-4 rounded-lg font-medium transition-colors bg-brand text-white"
             >
-              Admin
+              Staff
             </button>
           </div>
 
@@ -123,7 +121,7 @@ export default function AdminLoginPage() {
                   className="w-4 h-4 border-gray-300"
                   style={{ accentColor: '#10B981' }}
                 />
-                <span className="ml-2 text-sm font-medium text-gray-700">Admin ID</span>
+                <span className="ml-2 text-sm font-medium text-gray-700">Staff ID</span>
               </label>
             </div>
           </div>
@@ -206,9 +204,7 @@ export default function AdminLoginPage() {
                 />
                 <span className="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <Link href="/auth/forgot-password/admin" className="text-sm text-brand hover:text-brand-hover font-medium">
-                Forgot Password?
-              </Link>
+              
             </div>
 
             {/* Sign In Button */}
@@ -232,13 +228,7 @@ export default function AdminLoginPage() {
             </div>
           </div>
 
-          {/* Contact Support Link */}
-          <p className="text-center text-sm text-gray-600 mt-6">
-            Need help?{' '}
-            <Link href="/support" className="text-brand hover:text-brand-hover font-medium">
-              Contact Support
-            </Link>
-          </p>
+        
           </div>
           {/* End of Rounded Box Container */}
         </div>

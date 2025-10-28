@@ -3,9 +3,14 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useGoogleLogin } from '@react-oauth/google';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/app/contexts/AuthContext';
 
 export default function PatientSignupPage() {
-  const [userType, setUserType] = useState<'patient' | 'doctor' | 'admin'>('patient');
+  const router = useRouter();
+  const { login } = useAuth();
+  const [userType, setUserType] = useState<'doctor' | 'admin'>('admin');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
@@ -78,18 +83,42 @@ export default function PatientSignupPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      // Handle signup logic here
-      console.log({ userType, fullName, email, mobile, password, confirmPassword, agreeToTerms });
+      // Use auth context login - admin role
+      const success = await login(email, password, 'admin');
+      if (success) {
+        console.log('Signup successful');
+        // Router will handle redirect automatically via AuthContext
+      }
     }
   };
 
-  const handleGoogleSignUp = () => {
-    // Handle Google sign up logic here
-    console.log('Google sign up');
-  };
+  const googleSignup = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log('Google signup success:', tokenResponse);
+      
+      try {
+        // Fetch user info from Google
+        const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+        });
+        
+        const userData = await userInfo.json();
+        console.log('User data:', userData);
+        
+        // Use the auth context login with Google user data - admin role
+        await login(userData.email, 'google-oauth', 'admin');
+        
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    },
+    onError: (error) => {
+      console.error('Google signup failed:', error);
+    },
+  });
 
   return (
     <div className="flex h-screen overflow-hidden" data-auth-page>
@@ -360,7 +389,7 @@ export default function PatientSignupPage() {
           {/* Google Sign Up */}
           <button
             type="button"
-            onClick={handleGoogleSignUp}
+            onClick={() => googleSignup()}
             className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">

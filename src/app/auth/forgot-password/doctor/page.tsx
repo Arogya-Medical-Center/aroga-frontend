@@ -70,38 +70,7 @@ export default function DoctorForgotPasswordPage() {
                 Enter your details and we&apos;ll send you reset instructions.
               </p>
 
-              {/* Verification Method Selection */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Verification Method
-                </label>
-                <div className="flex gap-4">
-                  <label className="flex items-center flex-1 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                    <input
-                      type="radio"
-                      name="verification"
-                      value="email"
-                      checked={verificationMethod === 'email'}
-                      onChange={(e) => setVerificationMethod(e.target.value as 'email')}
-                      className="w-4 h-4 border-gray-300"
-                      style={{ accentColor: '#10B981' }}
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700">Email</span>
-                  </label>
-                  <label className="flex items-center flex-1 p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-                    <input
-                      type="radio"
-                      name="verification"
-                      value="license"
-                      checked={verificationMethod === 'license'}
-                      onChange={(e) => setVerificationMethod(e.target.value as 'license')}
-                      className="w-4 h-4 border-gray-300"
-                      style={{ accentColor: '#10B981' }}
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700">License</span>
-                  </label>
-                </div>
-              </div>
+             
 
               {/* Forgot Password Form */}
               <form onSubmit={handleSubmit} className="space-y-5">
