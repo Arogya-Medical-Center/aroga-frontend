@@ -1,9 +1,11 @@
 "use client";
 
+import React from "react";
 import { useState, useMemo } from "react";
 import DrugTable from "../../components/inventory/DrugTable";
 import DrugFormModal, { Drug } from "../../components/inventory/DrugFormModal";
 import ConfirmDeleteModal from "../../components/inventory/ConfirmDeleteModal";
+import TreatmentProtocolManager from "../prescription-assistant/page";
 
 const seed: Drug[] = [
   { id: 'D001', name: 'Paracetamol', category: 'Analgesic', quantity: 120, unit: 'tabs', reorderLevel: 20 },
@@ -102,6 +104,9 @@ export default function DrugInventoryPage() {
           <DrugTable items={filtered} onEdit={handleEdit} onDelete={handleDelete} />
         </div>
       </div>
+
+      {/* Treatment Protocols Section */}
+      <TreatmentProtocolManager />
 
       <DrugFormModal open={showForm} initial={editing} onCancel={()=>{setShowForm(false); setEditing(undefined)}} onSave={handleSave} />
       <ConfirmDeleteModal open={!!deletingId} name={items.find(i=>i.id===deletingId)?.name} onCancel={()=>setDeletingId(null)} onConfirm={confirmDelete} />
