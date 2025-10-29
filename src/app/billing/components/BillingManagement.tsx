@@ -8,6 +8,20 @@ interface BillItem {
   total: number;
 }
 
+interface BillData {
+  billId: string;
+  patientId: string;
+  patientName: string;
+  billDate: string;
+  authorized: boolean;
+  items: BillItem[];
+  subtotal: number;
+  tax: number;
+  total: number;
+  generatedAt: string;
+  status: string;
+}
+
 export default function BillingManagement() {
   const [billItems, setBillItems] = useState<BillItem[]>([]);
   const [patientId, setPatientId] = useState('');
@@ -44,10 +58,221 @@ export default function BillingManagement() {
     return billItems.reduce((sum, item) => sum + item.total, 0);
   };
 
+  const generatePDF = (billData: BillData) => {
+    const billHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Medical Bill - ${billData.billId}</title>
+        <style>
+          @page { size: A4; margin: 20mm; }
+          body { 
+            font-family: 'Arial', sans-serif; 
+            margin: 0; 
+            padding: 40px;
+            color: #333;
+          }
+          .header { 
+            text-align: center; 
+            border-bottom: 4px solid #00D563; 
+            padding-bottom: 20px; 
+            margin-bottom: 30px;
+          }
+          .hospital-name { 
+            font-size: 28px; 
+            font-weight: bold; 
+            color: #00D563; 
+            margin-bottom: 8px;
+          }
+          .bill-title { 
+            font-size: 24px; 
+            font-weight: bold; 
+            margin-top: 15px;
+            color: #333;
+          }
+          .info-section { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+          }
+          .info-item { margin-bottom: 10px; }
+          .info-label { 
+            font-size: 12px; 
+            color: #666; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .info-value { 
+            font-size: 16px; 
+            font-weight: bold; 
+            color: #333; 
+            margin-top: 4px;
+          }
+          table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 30px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          }
+          th { 
+            background: #00D563; 
+            color: white; 
+            padding: 15px; 
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+          }
+          td { 
+            padding: 12px 15px; 
+            border-bottom: 1px solid #e0e0e0;
+          }
+          tr:hover { background: #f8f9fa; }
+          .totals-section { 
+            margin-top: 30px; 
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+          }
+          .total-row { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 10px 0;
+            font-size: 16px;
+          }
+          .total-row.grand-total { 
+            border-top: 3px solid #00D563; 
+            margin-top: 15px;
+            padding-top: 15px;
+            font-size: 20px; 
+            font-weight: bold;
+          }
+          .total-row.grand-total .amount { color: #00D563; }
+          .footer { 
+            margin-top: 50px; 
+            padding-top: 20px; 
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+          }
+          .authorization { 
+            margin-top: 40px; 
+            padding: 20px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="hospital-name">Arogya Healthcare Center</div>
+          <div style="color: #666; margin-top: 5px;">123 Medical Street, City, State 12345</div>
+          <div style="color: #666; margin-top: 5px;">Phone: (555) 123-4567 | Email: info@arogya.com</div>
+          <div class="bill-title">MEDICAL BILL</div>
+        </div>
+
+        <div class="info-section">
+          <div>
+            <div class="info-item">
+              <div class="info-label">Bill ID</div>
+              <div class="info-value">${billData.billId}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Patient Name</div>
+              <div class="info-value">${billData.patientName}</div>
+            </div>
+          </div>
+          <div>
+            <div class="info-item">
+              <div class="info-label">Patient ID</div>
+              <div class="info-value">${billData.patientId}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-label">Bill Date</div>
+              <div class="info-value">${new Date(billData.billDate).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              })}</div>
+            </div>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 50%">Service Description</th>
+              <th style="width: 15%; text-align: center;">Quantity</th>
+              <th style="width: 17%; text-align: right;">Unit Price</th>
+              <th style="width: 18%; text-align: right;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${billData.items.map((item: BillItem) => `
+              <tr>
+                <td><strong>${item.service}</strong></td>
+                <td style="text-align: center;">${item.quantity}</td>
+                <td style="text-align: right;">LKR ${item.unitPrice.toFixed(2)}</td>
+                <td style="text-align: right;"><strong>LKR ${item.total.toFixed(2)}</strong></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        <div class="totals-section">
+          <div class="total-row">
+            <span>Subtotal:</span>
+            <span class="amount">LKR ${billData.subtotal.toFixed(2)}</span>
+          </div>
+          <div class="total-row">
+            <span>Tax (10%):</span>
+            <span class="amount">LKR ${billData.tax.toFixed(2)}</span>
+          </div>
+          <div class="total-row grand-total">
+            <span>TOTAL AMOUNT:</span>
+            <span class="amount">LKR ${billData.total.toFixed(2)}</span>
+          </div>
+        </div>
+
+        ${billData.authorized ? `
+          <div class="authorization">
+            <strong>✓ Authorized by Staff</strong>
+            <div style="margin-top: 10px;">This bill has been reviewed and authorized by hospital staff.</div>
+          </div>
+        ` : ''}
+
+        <div class="footer">
+          <p><strong>Thank you for choosing Arogya Healthcare Center</strong></p>
+          <p>This is a computer-generated bill. For queries, please contact our billing department.</p>
+          <p style="margin-top: 20px; font-size: 11px;">Generated on: ${new Date(billData.generatedAt).toLocaleString()}</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '', 'width=800,height=600');
+    if (printWindow) {
+      printWindow.document.write(billHTML);
+      printWindow.document.close();
+      
+      setTimeout(() => {
+        printWindow.print();
+      }, 250);
+    }
+
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validation
     if (!patientId || !patientName || !billDate) {
       alert('Please fill in all required patient information');
       return;
@@ -63,8 +288,9 @@ export default function BillingManagement() {
       return;
     }
     
-    // Generate bill data
-    const billData = {
+    setIsSubmitting(true);
+    
+    const billData: BillData = {
       billId: `BILL${Date.now().toString().slice(-6)}`,
       patientId,
       patientName,
@@ -72,26 +298,25 @@ export default function BillingManagement() {
       authorized,
       items: billItems,
       subtotal: calculateTotal(),
-      tax: calculateTotal() * 0.1, // 10% tax
+      tax: calculateTotal() * 0.1,
       total: calculateTotal() * 1.1,
       generatedAt: new Date().toISOString(),
       status: 'Generated'
     };
     
-    console.log('Bill Generated Successfully:', billData);
-    
-    // Show success message
-    alert(`✅ Bill Generated Successfully!\n\nBill ID: ${billData.billId}\nPatient: ${patientName}\nTotal Amount: ${billData.total.toFixed(2)}\n\nBill has been saved to the system.`);
-    
-    // Reset form after successful generation
-    const shouldReset = confirm('Do you want to create another bill?');
-    if (shouldReset) {
-      setPatientId('');
-      setPatientName('');
-      setBillDate('');
-      setBillItems([]);
-      setAuthorized(false);
-    }
+    setTimeout(() => {
+      generatePDF(billData);
+      setIsSubmitting(false);
+      
+      const shouldReset = confirm('Bill generated successfully! Do you want to create another bill?');
+      if (shouldReset) {
+        setPatientId('');
+        setPatientName('');
+        setBillDate('');
+        setBillItems([]);
+        setAuthorized(false);
+      }
+    }, 500);
   };
 
   return (
@@ -105,7 +330,7 @@ export default function BillingManagement() {
             type="text"
             value={patientId}
             onChange={(e) => setPatientId(e.target.value)}
-                              className="w-full px-4 py-2.5 text-gray-900 bg-white border-2 border-gray-300 rounded-lg focus:border-[#00D563] focus:ring-2 focus:ring-[#00D563]/20 outline-none transition-all"
+            className="w-full px-4 py-2.5 text-gray-900 bg-white border-2 border-gray-300 rounded-lg focus:border-[#00D563] focus:ring-2 focus:ring-[#00D563]/20 outline-none transition-all"
             placeholder="Enter patient ID"
             required
           />
@@ -198,7 +423,7 @@ export default function BillingManagement() {
                 <div className="col-span-2">
                   <input
                     type="text"
-                    value={`$${item.total.toFixed(2)}`}
+                    value={`LKR ${item.total.toFixed(2)}`}
                     className="w-full px-3 py-2 text-gray-900 bg-gray-100 border border-gray-300 rounded-md font-semibold"
                     disabled
                   />
@@ -221,7 +446,7 @@ export default function BillingManagement() {
           <div className="bg-[#00D563]/10 px-6 py-3 rounded-lg border-2 border-[#00D563]/30">
             <span className="text-sm text-gray-600 mr-2">Total Amount:</span>
             <span className="text-2xl font-bold text-[#00D563]">
-              ${calculateTotal().toFixed(2)}
+              LKR {calculateTotal().toFixed(2)}
             </span>
           </div>
         </div>
@@ -255,13 +480,6 @@ export default function BillingManagement() {
           type="submit"
           disabled={!authorized || billItems.length === 0 || isSubmitting}
           className="px-8 py-3 bg-[#00D563] text-white font-semibold rounded-lg hover:bg-[#00C157] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2"
-          title={
-            !authorized 
-              ? 'Please authorize the bill first' 
-              : billItems.length === 0 
-                ? 'Please add at least one bill item' 
-                : 'Generate bill'
-          }
         >
           {isSubmitting ? (
             <>
@@ -269,12 +487,12 @@ export default function BillingManagement() {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <span>Generating Bill...</span>
+              <span>Generating...</span>
             </>
           ) : (
             <>
-              <span>🧾</span>
-              <span>Generate Bill</span>
+              <span>📄</span>
+              <span>Generate Bill PDF</span>
             </>
           )}
         </button>
