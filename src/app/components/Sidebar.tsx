@@ -48,12 +48,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
       href: "/dashboard/patients",
       active: true,
     },
-    {
-      id: "reports",
-      label: "Reports",
-      icon: <ReportsIcon />,
-      href: "/reports",
-    },
+   
     {
       id: "bmi-calculator",
       label: "BMI Calculator",
