@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PrescriptionIntegration, Prescription } from "./PrescriptionIntegration";
 
 export interface ConsultationData {
@@ -32,10 +32,11 @@ export default function ConsultationForm({
   onCancel,
   initialData,
 }: ConsultationFormProps) {
+  const [isClient, setIsClient] = useState(false);
   const [formData, setFormData] = useState<ConsultationData>({
     patientId: initialData?.patientId || patientId,
     patientName: initialData?.patientName || patientName,
-    date: initialData?.date || new Date().toISOString().split('T')[0],
+    date: initialData?.date || "",
     symptoms: initialData?.symptoms || [""],
     diagnosis: initialData?.diagnosis || "",
     treatment: initialData?.treatment || "",
@@ -46,6 +47,18 @@ export default function ConsultationForm({
   });
 
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
+
+  // Handle client-side hydration
+  useEffect(() => {
+    setIsClient(true);
+    // Set today's date only on client side
+    if (!initialData?.date) {
+      setFormData(prev => ({
+        ...prev,
+        date: new Date().toISOString().split('T')[0]
+      }));
+    }
+  }, [initialData?.date]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -166,6 +179,7 @@ export default function ConsultationForm({
             onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
             className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
             required
+            suppressHydrationWarning
           />
         </div>
 
