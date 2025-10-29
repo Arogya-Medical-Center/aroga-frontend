@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { PrescriptionIntegration, Prescription } from "./PrescriptionIntegration";
 
 export interface ConsultationData {
@@ -32,15 +33,26 @@ export default function ConsultationForm({
   onCancel,
   initialData,
 }: ConsultationFormProps) {
+  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [formData, setFormData] = useState<ConsultationData>({
-    patientId: initialData?.patientId || patientId,
-    patientName: initialData?.patientName || patientName,
+    patientId: initialData?.patientId || patientId || "PAT004",
+    patientName: initialData?.patientName || patientName || "Alice Johnson",
     date: initialData?.date || "",
-    symptoms: initialData?.symptoms || [""],
-    diagnosis: initialData?.diagnosis || "",
-    treatment: initialData?.treatment || "",
-    notes: initialData?.notes || [""],
+    symptoms: initialData?.symptoms || [
+      "Persistent cough for 5 days",
+      "Mild fever (100.5°F)",
+      "Fatigue and body aches",
+      "Sore throat"
+    ],
+    diagnosis: initialData?.diagnosis || "Upper Respiratory Tract Infection (URTI) - likely viral etiology with secondary bacterial component. Patient presents with classic symptoms of respiratory infection.",
+    treatment: initialData?.treatment || "Symptomatic treatment with rest, hydration, and monitoring. Prescribed antibiotics for potential bacterial component. Patient advised to follow up in 3-5 days if symptoms persist or worsen. Complete bed rest for 48 hours recommended.",
+    notes: initialData?.notes || [
+      "Patient has no known drug allergies",
+      "Vital signs: BP 120/80, Temp 100.5°F, HR 88 bpm",
+      "No recent travel history or COVID exposure",
+      "Recommend isolation for 48 hours after fever subsides"
+    ],
     doctorId: initialData?.doctorId || "DOC001", // This should come from auth context
     doctorName: initialData?.doctorName || "Dr. Danushka Ranasinghe", // This should come from auth context
     prescriptions: initialData?.prescriptions || [],
@@ -148,7 +160,7 @@ export default function ConsultationForm({
               id="patientId"
               value={formData.patientId}
               onChange={(e) => setFormData(prev => ({ ...prev, patientId: e.target.value }))}
-              className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-black"
               required
             />
           </div>
@@ -161,7 +173,7 @@ export default function ConsultationForm({
               id="patientName"
               value={formData.patientName}
               onChange={(e) => setFormData(prev => ({ ...prev, patientName: e.target.value }))}
-              className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-black"
               required
             />
           </div>
@@ -177,7 +189,7 @@ export default function ConsultationForm({
             id="date"
             value={formData.date}
             onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-            className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-black"
             required
             suppressHydrationWarning
           />
@@ -206,7 +218,7 @@ export default function ConsultationForm({
                   value={symptom}
                   onChange={(e) => updateSymptom(index, e.target.value)}
                   placeholder={`Symptom ${index + 1}`}
-                  className="flex-1 px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="flex-1 px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-black"
                   required={index === 0}
                 />
                 {formData.symptoms.length > 1 && (
@@ -234,7 +246,7 @@ export default function ConsultationForm({
             value={formData.diagnosis}
             onChange={(e) => setFormData(prev => ({ ...prev, diagnosis: e.target.value }))}
             placeholder="Enter diagnosis details..."
-            className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-black"
             required
           />
         </div>
@@ -250,7 +262,7 @@ export default function ConsultationForm({
             value={formData.treatment}
             onChange={(e) => setFormData(prev => ({ ...prev, treatment: e.target.value }))}
             placeholder="Enter treatment plan and recommendations..."
-            className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-black"
             required
           />
         </div>
@@ -278,7 +290,7 @@ export default function ConsultationForm({
                   onChange={(e) => updateNote(index, e.target.value)}
                   placeholder={`Note ${index + 1}`}
                   rows={2}
-                  className="flex-1 px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  className="flex-1 px-3 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-black"
                 />
                 {formData.notes.length > 1 && (
                   <button
@@ -296,13 +308,28 @@ export default function ConsultationForm({
 
         {/* Prescription Integration */}
         <div>
-          <h3 className="text-lg font-medium text-neutral-900 mb-4">Prescriptions</h3>
-          <PrescriptionIntegration
-            consultationId={formData.id || "new"}
-            patientId={formData.patientId}
-            doctorId={formData.doctorId}
-            onPrescriptionChange={setPrescriptions}
-          />
+          <div className="mb-4">
+            <h3 className="text-lg font-medium text-neutral-900 mb-3">Prescriptions</h3>
+            <button
+              type="button"
+              onClick={() => {
+                // Create URL with consultation data as query parameters
+                const params = new URLSearchParams({
+                  patientId: formData.patientId,
+                  patientName: formData.patientName,
+                  diagnosis: formData.diagnosis,
+                  symptoms: formData.symptoms.filter(s => s.trim()).join(', '),
+                  treatment: formData.treatment,
+                  consultationId: formData.id || 'new'
+                });
+                router.push(`/dashboard/prescription?${params.toString()}`);
+              }}
+              className="inline-flex items-center gap-2 px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <PrescriptionIcon />
+              Open Prescription
+            </button>
+          </div>
         </div>
 
         {/* Form Actions */}
@@ -342,6 +369,18 @@ function TrashIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+    </svg>
+  );
+}
+
+function PrescriptionIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className || "h-4 w-4"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14,2 14,8 20,8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10,9 9,9 8,9" />
     </svg>
   );
 }

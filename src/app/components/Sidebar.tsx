@@ -265,6 +265,8 @@ function PatientsIcon() {
   );
 }
 
+
+
 function PillIcon() {
   return (
     <svg
