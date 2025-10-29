@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 // Define TypeScript interfaces
 interface Patient {
@@ -59,13 +60,14 @@ const patientsDatabase: Patient[] = [
 
 export default function PrescriptionPage() {
   const printRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
   
   // Mock data - auto-filled
   const [doctor] = useState<Doctor>({
     name: "Dr. Danushka Ranasinghe",
     qualification: "MBBS, MD (Internal Medicine)",
     registration: "SLMC/12345",
-    hospital: "Arogya Healthcare Center",
+    hospital: "Aroga Healthcare Center",
     contact: "+94 77 123 4567"
   });
 
@@ -94,6 +96,65 @@ export default function PrescriptionPage() {
 
   const [prescriptionId] = useState(`RX-${Date.now()}`);
   const [prescriptionDate] = useState(new Date().toLocaleDateString('en-GB'));
+  const [showPreview, setShowPreview] = useState(false);
+  const [isPrescriptionGenerated, setIsPrescriptionGenerated] = useState(false);
+
+  // Auto-fill form from URL parameters (consultation data)
+  useEffect(() => {
+    const patientId = searchParams.get('patientId');
+    const patientName = searchParams.get('patientName');
+    const consultationDiagnosis = searchParams.get('diagnosis');
+    const symptoms = searchParams.get('symptoms');
+    const treatment = searchParams.get('treatment');
+    const consultationId = searchParams.get('consultationId');
+
+    if (patientId && patientName) {
+      // Try to find existing patient or create a new one
+      let patient = patientsDatabase.find(p => p.id === patientId);
+      
+      if (!patient) {
+        // Create a temporary patient record for the form from consultation data
+        patient = {
+          id: patientId,
+          name: patientName,
+          age: 35, // Default age, can be edited manually
+          gender: "Not specified", // This can be filled manually
+          contact: "To be updated", // This can be filled manually
+          address: "To be updated" // This can be filled manually
+        };
+        
+        // Add to the temporary database for this session
+        patientsDatabase.push(patient);
+      }
+      
+      setSelectedPatient(patient);
+    }
+
+    if (consultationDiagnosis) {
+      setDiagnosis(consultationDiagnosis);
+    }
+
+    if (symptoms || treatment) {
+      let notes = [];
+      if (symptoms) notes.push(`Patient symptoms: ${symptoms}`);
+      if (treatment) notes.push(`Treatment plan: ${treatment}`);
+      notes.push(`\nFollow up in 1 week if symptoms persist. Maintain proper medication schedule and complete the full course as prescribed.`);
+      
+      setAdditionalNotes(notes.join('\n\n'));
+    }
+
+    // Clear default medicines when coming from consultation
+    if (patientId) {
+      setMedicines([{
+        id: "1",
+        name: "",
+        dosage: "",
+        frequency: "",
+        duration: "",
+        instructions: ""
+      }]);
+    }
+  }, [searchParams]);
 
   // Handle patient selection
   const handlePatientChange = (patientId: string) => {
@@ -141,6 +202,31 @@ export default function PrescriptionPage() {
     }
   };
 
+  // Generate prescription
+  const handleGeneratePrescription = () => {
+    // Validate that required fields are filled
+    const hasValidMedicines = medicines.some(med => 
+      med.name.trim() && med.dosage.trim() && med.frequency.trim()
+    );
+    
+    if (!selectedPatient.name || !diagnosis.trim() || !hasValidMedicines) {
+      alert('Please fill in all required fields: Patient information, diagnosis, and at least one complete medication.');
+      return;
+    }
+
+    setIsPrescriptionGenerated(true);
+    alert('Prescription generated successfully! You can now view the preview.');
+  };
+
+  // Check if prescription form has enough data to show preview
+  const isPrescriptionReady = () => {
+    const hasBasicInfo = selectedPatient.name && diagnosis.trim();
+    const hasValidMedicine = medicines.some(med => 
+      med.name.trim() && med.dosage.trim() && med.frequency.trim() && med.duration.trim()
+    );
+    return hasBasicInfo && hasValidMedicine;
+  };
+
   return (
     <>
       {/* Print Styles */}
@@ -167,18 +253,30 @@ export default function PrescriptionPage() {
 
       <div className="p-6 bg-neutral-50 min-h-screen">
         <div className="mb-6 flex items-center justify-between no-print">
-          <h1 className="text-3xl font-bold text-neutral-900">Create Prescription</h1>
+          <div>
+            <h1 className="text-3xl font-bold text-neutral-900">Create Prescription</h1>
+          </div>
           <div className="flex gap-3">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
+              disabled={!isPrescriptionGenerated}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                !isPrescriptionGenerated
+                  ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
+                  : 'bg-green-600 text-white hover:bg-green-700'
+              }`}
             >
               <PrintIcon />
               Print
             </button>
             <button
               onClick={handleDownload}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors"
+              disabled={!isPrescriptionGenerated}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                !isPrescriptionGenerated
+                  ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
             >
               <DownloadIcon />
               Download PDF
@@ -337,18 +435,65 @@ export default function PrescriptionPage() {
               className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900"
             />
           </div>
+
+          {/* Generate Prescription and Preview Buttons */}
+          <div className="flex justify-center gap-4 pt-6 border-t border-neutral-200">
+            <button
+              onClick={handleGeneratePrescription}
+              disabled={isPrescriptionGenerated}
+              className={`flex items-center gap-2 px-8 py-3 rounded-lg font-medium text-lg transition-colors ${
+                isPrescriptionGenerated
+                  ? 'bg-green-100 text-green-800 border border-green-300 cursor-not-allowed'
+                  : 'bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500'
+              }`}
+            >
+              <GenerateIcon />
+              {isPrescriptionGenerated ? '✓ Prescription Generated' : 'Generate Prescription'}
+            </button>
+            
+            <button
+              onClick={() => isPrescriptionGenerated && setShowPreview(!showPreview)}
+              disabled={!isPrescriptionGenerated}
+              className={`flex items-center gap-2 px-8 py-3 rounded-lg font-medium text-lg transition-colors ${
+                !isPrescriptionGenerated 
+                  ? 'bg-gray-400 text-gray-300 cursor-not-allowed' 
+                  : showPreview 
+                    ? 'bg-gray-600 text-white hover:bg-gray-700' 
+                    : 'bg-purple-600 text-white hover:bg-purple-700'
+              }`}
+            >
+              <PreviewIcon />
+              {showPreview ? 'Hide Preview' : 'Preview Prescription'}
+            </button>
+          </div>
         </div>
 
         {/* Prescription Preview (for printing) */}
+        {showPreview && isPrescriptionGenerated && (
         <div className="bg-white rounded-lg border border-neutral-200 p-6">
-          <h2 className="text-xl font-bold text-neutral-900 mb-4 no-print">Prescription Preview</h2>
+          {!isPrescriptionReady() ? (
+            <>
+              <h2 className="text-xl font-bold text-neutral-700 mb-4 no-print">Prescription Preview</h2>
+              <div className="text-center py-8">
+                <div className="mx-auto h-16 w-16 text-neutral-400 mb-4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                </div>
+                <p className="text-neutral-600 text-lg mb-2">Fill out prescription details to see preview</p>
+                <p className="text-neutral-500 text-sm">Complete patient information, diagnosis, and at least one medication to generate the prescription preview.</p>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="text-xl font-bold text-neutral-900 mb-4 no-print">Prescription Preview</h2>
           
           <div id="prescription-print-area" ref={printRef} className="border-2 border-neutral-300 rounded-lg p-8 bg-white">
             {/* Header */}
             <div className="text-center border-b-2 border-neutral-800 pb-4 mb-6">
-              <h1 className="text-2xl font-bold text-green-600 mb-2">Arogya Healthcare Center</h1>
+              <h1 className="text-2xl font-bold text-green-600 mb-2">Aroga Healthcare Center</h1>
               <p className="text-sm text-neutral-700">123 Medical Street, Health City, Sri Lanka</p>
-              <p className="text-sm text-neutral-700">Tel: +94 77 123 4567 | Email: info@arogya.lk</p>
+              <p className="text-sm text-neutral-700">Tel: +94 77 123 4567 | Email: info@aroga.lk</p>
             </div>
 
             {/* Doctor Info */}
@@ -440,7 +585,10 @@ export default function PrescriptionPage() {
               <p>For any queries, please contact: {doctor.contact}</p>
             </div>
           </div>
+          </>
+          )}
         </div>
+        )}
       </div>
     </>
   );
@@ -481,6 +629,27 @@ function TrashIcon() {
     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <polyline points="3 6 5 6 21 6" />
       <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+    </svg>
+  );
+}
+
+function PreviewIcon() {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+function GenerateIcon() {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14,2 14,8 20,8" />
+      <line x1="16" y1="13" x2="8" y2="13" />
+      <line x1="16" y1="17" x2="8" y2="17" />
+      <polyline points="10,9 9,9 8,9" />
     </svg>
   );
 }

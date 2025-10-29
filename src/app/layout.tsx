@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Arogya Healthcare - Patient Management System",
-  description: "Comprehensive patient management system for Arogya Healthcare Center",
+  title: "Aroga Healthcare - Patient Management System",
+  description: "Comprehensive patient management system for Aroga Healthcare Center",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
