@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
 
+
 type NavItem = {
   id: string;
   label: string;
@@ -31,7 +32,7 @@ export default function Sidebar({ user, navItems, className }: Props) {
   const defaultUser = {
     name: "Dr. Danushka Ranasinghe",
     role: "Medical Officer",
-    avatar: "/avatar.jpg", // Replace with actual path
+    avatar: "/DrDhanushka.jpg", // Replace with actual path
   };
 
   const defaultNavItems: NavItem[] = [
