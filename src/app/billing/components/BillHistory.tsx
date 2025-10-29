@@ -24,7 +24,7 @@ export default function BillHistory() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Paid': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      case 'Paid': return 'bg-[#00D563]/10 text-[#00D563] border-[#00D563]/30';
       case 'Pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'Overdue': return 'bg-red-100 text-red-800 border-red-200';
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
@@ -53,7 +53,7 @@ export default function BillHistory() {
               type="date"
               value={dateRange.start}
               onChange={e => setDateRange({ ...dateRange, start: e.target.value })}
-              className="w-full px-4 py-2.5 text-gray-900 bg-white border-2 border-gray-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+              className="w-full px-4 py-2.5 text-gray-900 bg-white border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all"
             />
           </div>
           <div>
@@ -96,9 +96,9 @@ export default function BillHistory() {
           <p className="text-sm text-gray-600 font-medium">Total Bills</p>
           <p className="text-2xl font-bold text-gray-800 mt-1">{filteredBills.length}</p>
         </div>
-        <div className="bg-emerald-50 p-4 rounded-lg border-2 border-emerald-200 shadow-sm">
-          <p className="text-sm text-emerald-700 font-medium">Paid</p>
-          <p className="text-2xl font-bold text-emerald-800 mt-1">
+        <div className="bg-green-50 p-4 rounded-lg border-2 border-green-200 shadow-sm">
+          <p className="text-sm text-green-700 font-medium">Paid</p>
+          <p className="text-2xl font-bold text-green-800 mt-1">
             {filteredBills.filter(b => b.status === 'Paid').length}
           </p>
         </div>
@@ -110,7 +110,7 @@ export default function BillHistory() {
         </div>
         <div className="bg-gray-50 p-4 rounded-lg border-2 border-gray-200 shadow-sm">
           <p className="text-sm text-gray-600 font-medium">Total Amount</p>
-          <p className="text-2xl font-bold text-gray-800 mt-1">${totalAmount.toFixed(2)}</p>
+          <p className="text-2xl font-bold text-gray-800 mt-1">LKR{totalAmount.toFixed(2)}</p>
         </div>
       </div>
 
@@ -118,7 +118,7 @@ export default function BillHistory() {
       <div className="bg-white rounded-lg border-2 border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-emerald-600">
+            <thead className="bg-green-500">
               <tr>
                 <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                   Bill ID
@@ -167,10 +167,10 @@ export default function BillHistory() {
                       })}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">
-                      ${bill.amount.toFixed(2)}
+                      LKR{bill.amount.toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold LKR{
                         bill.type === 'Insurance' 
                           ? 'bg-blue-100 text-blue-800 border border-blue-200' 
                           : 'bg-purple-100 text-purple-800 border border-purple-200'
@@ -179,12 +179,12 @@ export default function BillHistory() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full border ${getStatusColor(bill.status)}`}>
+                      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full border LKR{getStatusColor(bill.status)}`}>
                         {bill.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm space-x-3">
-                      <button className="text-emerald-600 hover:text-emerald-800 font-semibold transition-colors">
+                      <button className="text-green-600 hover:text-green-800 font-semibold transition-colors">
                         View
                       </button>
                       <button className="text-blue-600 hover:text-blue-800 font-semibold transition-colors">

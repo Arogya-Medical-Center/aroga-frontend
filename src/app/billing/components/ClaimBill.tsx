@@ -32,9 +32,9 @@ export default function ClaimBill() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-6 rounded-t-lg">
+      <div className="bg-gradient-to-r from-[#00D563] to-[#00C157] text-white p-6 rounded-t-lg shadow-lg">
         <h2 className="text-2xl font-bold">Insurance Claim Form</h2>
-        <p className="text-emerald-100 mt-1">Submit insurance claims for patient billing</p>
+        <p className="text-white/90 mt-1">Submit insurance claims for patient billing</p>
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-b-lg shadow-lg p-8 space-y-8">
@@ -50,7 +50,7 @@ export default function ClaimBill() {
                 type="text"
                 value={claimDetails.patientName}
                 onChange={e => setClaimDetails({ ...claimDetails, patientName: e.target.value })}
-                className="w-full px-4 py-2.5 text-gray-900 bg-white border-2 border-gray-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                className="w-full px-4 py-2.5 text-gray-900 bg-white border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all"
                 placeholder="Enter patient name"
                 required
               />
@@ -113,7 +113,7 @@ export default function ClaimBill() {
                 Claim Amount <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-2.5 text-gray-600 font-semibold">$</span>
+                <span className="absolute left-4 top-2.5 text-gray-600 font-semibold">LKR</span>
                 <input
                   type="number"
                   value={claimDetails.claimAmount}
@@ -184,7 +184,7 @@ export default function ClaimBill() {
           </button>
           <button
             type="submit"
-            className="px-8 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-colors shadow-md"
+            className="px-8 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors shadow-md"
           >
             Submit Claim
           </button>
