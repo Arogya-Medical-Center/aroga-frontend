@@ -277,7 +277,8 @@ export default function PatientManagementPage() {
                       placeholder="Name, Phone, Illness..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900 placeholder:text-neutral-500"
+                      className="w-full pl-10 pr-4 py-2 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900 placeholder:text-neutral-500 bg-white"
+                      style={{ color: '#111827', backgroundColor: '#ffffff' }}
                     />
                   </div>
                 </div>
@@ -288,12 +289,13 @@ export default function PatientManagementPage() {
                   <select
                     value={filterDateRange}
                     onChange={(e) => setFilterDateRange(e.target.value)}
-                    className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-800"
+                    className="w-full px-3 py-2 text-sm border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-800 bg-white"
+                    style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
                   >
-                    <option value="">All Time</option>
-                    <option value="today">Today</option>
-                    <option value="week">This Week</option>
-                    <option value="month">This Month</option>
+                    <option value="" style={{ color: '#1f2937' }}>All Time</option>
+                    <option value="today" style={{ color: '#1f2937' }}>Today</option>
+                    <option value="week" style={{ color: '#1f2937' }}>This Week</option>
+                    <option value="month" style={{ color: '#1f2937' }}>This Month</option>
                   </select>
                 </div>
 
@@ -714,12 +716,12 @@ function PatientProfileTabs({ patient }: { patient: any }) {
 
           {!isEditing ? (
             <div className="space-y-2 text-sm">
-              <p><b>Name:</b> {editedPatient.name}</p>
-              <p><b>Patient ID:</b> {editedPatient.id}</p>
-              <p><b>Age:</b> {editedPatient.age}</p>
-              <p><b>Gender:</b> {editedPatient.gender}</p>
-              <p><b>Contact:</b> {editedPatient.contact}</p>
-              <p><b>Doctor:</b> {editedPatient.doctor}</p>
+              <p className="text-neutral-900" style={{ color: '#111827' }}><b className="text-neutral-700">Name:</b> {editedPatient.name}</p>
+              <p className="text-neutral-900" style={{ color: '#111827' }}><b className="text-neutral-700">Patient ID:</b> {editedPatient.id}</p>
+              <p className="text-neutral-900" style={{ color: '#111827' }}><b className="text-neutral-700">Age:</b> {editedPatient.age}</p>
+              <p className="text-neutral-900" style={{ color: '#111827' }}><b className="text-neutral-700">Gender:</b> {editedPatient.gender}</p>
+              <p className="text-neutral-900" style={{ color: '#111827' }}><b className="text-neutral-700">Contact:</b> {editedPatient.contact}</p>
+              <p className="text-neutral-900" style={{ color: '#111827' }}><b className="text-neutral-700">Doctor:</b> {editedPatient.doctor}</p>
             </div>
           ) : (
             <div>
@@ -730,7 +732,8 @@ function PatientProfileTabs({ patient }: { patient: any }) {
                     type="text"
                     value={editedPatient.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900 bg-white"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
                   />
                 </div>
                 <div>
@@ -748,7 +751,8 @@ function PatientProfileTabs({ patient }: { patient: any }) {
                     type="number"
                     value={editedPatient.age}
                     onChange={(e) => handleInputChange('age', e.target.value)}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900 bg-white"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
                   />
                 </div>
                 <div>
@@ -756,11 +760,12 @@ function PatientProfileTabs({ patient }: { patient: any }) {
                   <select
                     value={editedPatient.gender}
                     onChange={(e) => handleInputChange('gender', e.target.value)}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900 bg-white"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
                   >
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                    <option value="Male" style={{ color: '#111827' }}>Male</option>
+                    <option value="Female" style={{ color: '#111827' }}>Female</option>
+                    <option value="Other" style={{ color: '#111827' }}>Other</option>
                   </select>
                 </div>
                 <div>
@@ -769,7 +774,8 @@ function PatientProfileTabs({ patient }: { patient: any }) {
                     type="tel"
                     value={editedPatient.contact}
                     onChange={(e) => handleInputChange('contact', e.target.value)}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900 bg-white"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
                   />
                 </div>
                 <div>
@@ -778,7 +784,8 @@ function PatientProfileTabs({ patient }: { patient: any }) {
                     type="text"
                     value={editedPatient.doctor}
                     onChange={(e) => handleInputChange('doctor', e.target.value)}
-                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900"
+                    className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-neutral-900 bg-white"
+                    style={{ color: '#111827', backgroundColor: '#ffffff' }}
                   />
                 </div>
               </div>
@@ -805,26 +812,26 @@ function PatientProfileTabs({ patient }: { patient: any }) {
 
       {tab === "medical" && (
         <div className="space-y-2 text-sm">
-          <p><b>Primary Illness:</b> {patient.primaryIllness}</p>
-          <p><b>Allergies:</b> None reported</p>
-          <p><b>Current Medications:</b> Amlodipine, Metformin</p>
-          <p><b>Notes:</b> Continue diet plan and regular monitoring.</p>
+          <p className="text-neutral-900" style={{ color: '#111827' }}><b>Primary Illness:</b> {patient.primaryIllness}</p>
+          <p className="text-neutral-900" style={{ color: '#111827' }}><b>Allergies:</b> None reported</p>
+          <p className="text-neutral-900" style={{ color: '#111827' }}><b>Current Medications:</b> Amlodipine, Metformin</p>
+          <p className="text-neutral-900" style={{ color: '#111827' }}><b>Notes:</b> Continue diet plan and regular monitoring.</p>
         </div>
       )}
 
       {tab === "visits" && (
         <ul className="list-disc pl-6 text-sm space-y-1">
-          <li>2025-05-14 – Routine Check-up</li>
-          <li>2025-07-01 – Follow-up Appointment</li>
-          <li>2025-09-20 – Lab Results Review</li>
+          <li className="text-neutral-900" style={{ color: '#111827' }}>2025-05-14 – Routine Check-up</li>
+          <li className="text-neutral-900" style={{ color: '#111827' }}>2025-07-01 – Follow-up Appointment</li>
+          <li className="text-neutral-900" style={{ color: '#111827' }}>2025-09-20 – Lab Results Review</li>
         </ul>
       )}
 
       {tab === "prescriptions" && (
         <div className="text-sm space-y-2">
-          <p><b>Latest Prescription:</b> Paracetamol 500mg – 3x daily</p>
-          <p><b>Previous:</b> Metformin 500mg BD (for Diabetes)</p>
-          <p><b>Duration:</b> 30 days</p>
+          <p className="text-neutral-900" style={{ color: '#111827' }}><b>Latest Prescription:</b> Paracetamol 500mg – 3x daily</p>
+          <p className="text-neutral-900" style={{ color: '#111827' }}><b>Previous:</b> Metformin 500mg BD (for Diabetes)</p>
+          <p className="text-neutral-900" style={{ color: '#111827' }}><b>Duration:</b> 30 days</p>
         </div>
       )}
     </div>

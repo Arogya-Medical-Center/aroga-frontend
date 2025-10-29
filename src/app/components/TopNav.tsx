@@ -35,14 +35,14 @@ export default function TopNav({ user, className }: Props) {
       <div className="flex items-center justify-between gap-4">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded bg-green-500 flex items-center justify-center">
-            <svg
-              className="h-5 w-5 text-white"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" />
-            </svg>
+          <div className="relative h-10 w-20 rounded overflow-hidden">
+            <Image
+              src="/logo.jpg"
+              alt="Aroga Healthcare Center Logo"
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
           <span className="text-lg font-semibold text-neutral-900">
             Aroga Healthcare Center

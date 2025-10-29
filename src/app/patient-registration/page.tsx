@@ -93,7 +93,7 @@ export default function PatientRegistration() {
       >
         {/* ------------------- PERSONAL INFORMATION ------------------- */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 border-b pb-1">
+          <h2 className="text-lg font-semibold mb-3 border-b pb-1 text-black">
             Personal Information
           </h2>
           <div className="grid grid-cols-2 gap-4">
@@ -102,7 +102,8 @@ export default function PatientRegistration() {
               <input
                 value={formData.id}
                 readOnly
-                className="w-full border rounded p-2 bg-gray-100"
+                className="w-full border rounded p-2 bg-gray-100 text-gray-900"
+                style={{ color: '#1f2937' }}
               />
             </div>
             <div>
@@ -111,7 +112,9 @@ export default function PatientRegistration() {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 text-gray-900 bg-white placeholder:text-gray-500"
+                style={{ color: '#1f2937' }}
+                placeholder="Enter first name"
               />
             </div>
             <div>
@@ -120,7 +123,9 @@ export default function PatientRegistration() {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 text-gray-900 bg-white placeholder:text-gray-500"
+                style={{ color: '#1f2937' }}
+                placeholder="Enter last name"
               />
             </div>
             <div>
@@ -130,15 +135,22 @@ export default function PatientRegistration() {
                 name="dob"
                 value={formData.dob}
                 onChange={handleChange}
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 text-gray-900 bg-white"
+                style={{ color: '#1f2937' }}
               />
             </div>
             <div>
               <label className="block text-gray-600 mb-1">Age</label>
               <input
+                name="age"
+                type="number"
                 value={formData.age}
-                readOnly
-                className="w-full border rounded p-2 bg-gray-100"
+                onChange={handleChange}
+                placeholder="Enter age"
+                className="w-full border rounded p-2 text-gray-900 bg-white placeholder:text-gray-500"
+                style={{ color: '#1f2937' }}
+                min="0"
+                max="150"
               />
             </div>
             <div>
@@ -147,12 +159,13 @@ export default function PatientRegistration() {
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 text-gray-900 bg-white"
+                style={{ color: '#1f2937' }}
               >
-                <option value="">Select Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
+                <option value="" style={{ color: '#1f2937' }}>Select Gender</option>
+                <option style={{ color: '#1f2937' }}>Male</option>
+                <option style={{ color: '#1f2937' }}>Female</option>
+                <option style={{ color: '#1f2937' }}>Other</option>
               </select>
             </div>
             <div>
@@ -161,7 +174,9 @@ export default function PatientRegistration() {
                 name="contact"
                 value={formData.contact}
                 onChange={handleChange}
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 text-gray-900 bg-white placeholder:text-gray-500"
+                style={{ color: '#1f2937' }}
+                placeholder="Enter contact number"
               />
             </div>
             <div>
@@ -171,7 +186,9 @@ export default function PatientRegistration() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 text-gray-900 bg-white placeholder:text-gray-500"
+                style={{ color: '#1f2937' }}
+                placeholder="Enter email address"
               />
             </div>
             <div className="col-span-2">
@@ -180,7 +197,9 @@ export default function PatientRegistration() {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 text-gray-900 bg-white placeholder:text-gray-500"
+                style={{ color: '#1f2937' }}
+                placeholder="Enter full address"
               />
             </div>
           </div>
@@ -188,7 +207,7 @@ export default function PatientRegistration() {
 
         {/* ------------------- MEDICAL HISTORY ------------------- */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 border-b pb-1">
+          <h2 className="text-lg font-semibold mb-3 border-b pb-1 text-black">
             Medical History
           </h2>
           <div className="grid grid-cols-2 gap-4">
@@ -198,17 +217,18 @@ export default function PatientRegistration() {
                 name="bloodType"
                 value={formData.bloodType}
                 onChange={handleChange}
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 text-gray-900 bg-white"
+                style={{ color: '#1f2937' }}
               >
-                <option value="">Select Blood Type</option>
-                <option>O+</option>
-                <option>O-</option>
-                <option>A+</option>
-                <option>A-</option>
-                <option>B+</option>
-                <option>B-</option>
-                <option>AB+</option>
-                <option>AB-</option>
+                <option value="" style={{ color: '#1f2937' }}>Select Blood Type</option>
+                <option style={{ color: '#1f2937' }}>O+</option>
+                <option style={{ color: '#1f2937' }}>O-</option>
+                <option style={{ color: '#1f2937' }}>A+</option>
+                <option style={{ color: '#1f2937' }}>A-</option>
+                <option style={{ color: '#1f2937' }}>B+</option>
+                <option style={{ color: '#1f2937' }}>B-</option>
+                <option style={{ color: '#1f2937' }}>AB+</option>
+                <option style={{ color: '#1f2937' }}>AB-</option>
               </select>
             </div>
             <div>
@@ -218,7 +238,8 @@ export default function PatientRegistration() {
                 value={formData.allergies}
                 onChange={handleChange}
                 placeholder="e.g. Penicillin, Dust"
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 text-gray-900 bg-white placeholder:text-gray-500"
+                style={{ color: '#1f2937' }}
               />
             </div>
             <div className="col-span-2">
@@ -230,7 +251,8 @@ export default function PatientRegistration() {
                 value={formData.conditions}
                 onChange={handleChange}
                 placeholder="e.g. Diabetes, Asthma"
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 text-gray-900 bg-white placeholder:text-gray-500"
+                style={{ color: '#1f2937' }}
               />
             </div>
             <div className="col-span-2">
@@ -242,7 +264,8 @@ export default function PatientRegistration() {
                 value={formData.medications}
                 onChange={handleChange}
                 placeholder="e.g. Metformin 500mg, Amlodipine"
-                className="w-full border rounded p-2"
+                className="w-full border rounded p-2 text-gray-900 bg-white placeholder:text-gray-500"
+                style={{ color: '#1f2937' }}
               />
             </div>
           </div>
