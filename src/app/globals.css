@@ -3,14 +3,25 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --brand: #10B981;
+  --brand-hover: #059669;
 }
 
-@theme inline {
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -23,4 +34,71 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Brand color utilities */
+.bg-brand {
+  background-color: var(--brand);
+}
+
+.bg-brand-hover:hover {
+  background-color: var(--brand-hover);
+}
+
+.text-brand {
+  color: var(--brand);
+}
+
+.border-brand {
+  border-color: var(--brand);
+}
+
+.focus\:ring-brand:focus {
+  --tw-ring-color: var(--brand);
+}
+
+.hover\:text-brand-hover:hover {
+  color: var(--brand-hover);
+}
+
+/* Dark text color for input fields in authentication pages only */
+[data-auth-page] input[type="text"],
+[data-auth-page] input[type="email"],
+[data-auth-page] input[type="password"],
+[data-auth-page] input[type="tel"],
+[data-auth-page] input[type="number"],
+[data-auth-page] select,
+[data-auth-page] textarea {
+  color: #111827;
+}
+
+[data-auth-page] input[type="text"]::placeholder,
+[data-auth-page] input[type="email"]::placeholder,
+[data-auth-page] input[type="password"]::placeholder,
+[data-auth-page] input[type="tel"]::placeholder,
+[data-auth-page] input[type="number"]::placeholder,
+[data-auth-page] select::placeholder,
+[data-auth-page] textarea::placeholder {
+  color: #9CA3AF;
+}
+
+/* Make calendar & appointment UI text black only inside these components */
+[data-name="calendar-view"],
+[data-name="calendar"],
+[data-name="dashboard-appointments"],
+[data-name="appointment-modal"],
+[data-name="appointment-details"] {
+  color: #000;
+  --text-secondary: #000000;
+  --text-primary: #000000;
+  --foreground: #000000;
+}
+
+/* Force descendant text to black (overrides Tailwind utility colors only inside these areas) */
+[data-name="calendar-view"] *,
+[data-name="calendar"] *,
+[data-name="dashboard-appointments"] *,
+[data-name="appointment-modal"] *,
+[data-name="appointment-details"] * {
+  color: #000 !important;
 }

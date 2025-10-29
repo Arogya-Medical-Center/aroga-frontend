@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Sidebar from "./components/Sidebar";
-import TopNav from "./components/TopNav";
+import ConditionalLayout from "./components/ConditionalLayout";
+import { AppointmentProvider } from "./contexts/AppointmentContext";
+import GoogleOAuthProvider from "./components/GoogleOAuthProvider";
+import { AuthProvider } from "./contexts/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,16 +24,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="antialiased overflow-hidden" suppressHydrationWarning>
-        <div className="flex h-screen">
-          <Sidebar />
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <TopNav />
-            <main className="flex-1 bg-neutral-50 p-6 overflow-y-auto">
-              {children}
-            </main>
-          </div>
-        </div>
+      <body className="antialiased overflow-hidden">
+        <AuthProvider>
+          <GoogleOAuthProvider>
+            <AppointmentProvider>
+              <ConditionalLayout>
+                {children}
+              </ConditionalLayout>
+            </AppointmentProvider>
+          </GoogleOAuthProvider>
+        </AuthProvider>
       </body>
     </html>
   );
