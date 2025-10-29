@@ -74,12 +74,6 @@ export default function Sidebar({ user, navItems, className }: Props) {
       href: "/appointments",
     },
     {
-      id: "prescription",
-      label: "Prescription",
-      icon: <PrescriptionIcon />,
-      href: "/dashboard/prescription",
-    },
-    {
       id: "appointments-calendar",
       label: "Calendar",
       icon: <CalendarIcon />,

@@ -669,7 +669,7 @@ function PatientProfileTabs({ patient }: { patient: any }) {
             className={`pb-2 ${
               tab === t.id
                 ? "border-b-2 border-green-600 text-green-700 font-semibold"
-                : "text-gray-500"
+                : "text-gray-800"
             }`}
           >
             {t.label}
