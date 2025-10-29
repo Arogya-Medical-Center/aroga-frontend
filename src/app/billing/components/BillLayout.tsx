@@ -48,9 +48,9 @@ export default function BillLayout() {
         <button
           type="button"
           onClick={() => setPreviewMode(!previewMode)}
-          className="px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-5 py-2.5 bg-[#00D563] text-white font-medium rounded-lg hover:bg-[#00C157] transition-all duration-200 shadow-md hover:shadow-lg"
         >
-          {previewMode ? 'Edit Mode' : 'Preview Mode'}
+          {previewMode ? '✏️ Edit Mode' : '👁️ Preview Mode'}
         </button>
       </div>
 
@@ -67,7 +67,7 @@ export default function BillLayout() {
                   type="text"
                   value={fields.hospitalName}
                   onChange={e => setFields({ ...fields, hospitalName: e.target.value })}
-                  className="w-full px-4 py-2.5 text-gray-900 bg-white border-2 border-gray-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                  className="w-full px-4 py-2.5 text-gray-900 bg-white border-2 border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all"
                   placeholder="Enter hospital name"
                 />
               </div>
@@ -188,7 +188,7 @@ export default function BillLayout() {
                   type="checkbox"
                   checked={fields.authorized}
                   onChange={e => setFields({ ...fields, authorized: e.target.checked })}
-                  className="w-5 h-5 text-emerald-600 bg-white border-gray-300 rounded focus:ring-emerald-500 focus:ring-2"
+                  className="w-5 h-5 text-green-600 bg-white border-gray-300 rounded focus:ring-green-500 focus:ring-2"
                 />
                 <span className="ml-3 text-sm font-medium text-gray-700">Authorized by Staff</span>
               </label>
@@ -217,7 +217,7 @@ export default function BillLayout() {
             </button>
             <button
               type="submit"
-              className="px-8 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-colors shadow-md"
+              className="px-8 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors shadow-md"
             >
               Save Layout
             </button>
@@ -226,10 +226,10 @@ export default function BillLayout() {
       ) : (
         /* Preview Mode - Bill Template */
         <div className="bg-white rounded-lg shadow-2xl p-12 max-w-3xl mx-auto">
-          <div className="border-4 border-emerald-600 p-8">
+          <div className="border-4 border-green-500 p-8">
             {/* Header */}
             <div className="text-center border-b-2 border-gray-300 pb-6 mb-6">
-              <h1 className="text-3xl font-bold text-emerald-700">{fields.hospitalName || 'Hospital Name'}</h1>
+              <h1 className="text-3xl font-bold text-green-600">{fields.hospitalName || 'Hospital Name'}</h1>
               <p className="text-gray-600 mt-2">{fields.hospitalAddress || 'Hospital Address'}</p>
               <p className="text-2xl font-bold text-gray-800 mt-4">MEDICAL BILL</p>
             </div>
@@ -274,7 +274,7 @@ export default function BillLayout() {
               </div>
               <div className="flex justify-between text-xl font-bold border-t-2 border-gray-300 pt-2">
                 <span className="text-gray-800">Total:</span>
-                <span className="text-emerald-700">{fields.total || '$0.00'}</span>
+                <span className="text-green-600">{fields.total || '$0.00'}</span>
               </div>
             </div>
 

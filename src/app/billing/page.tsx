@@ -22,7 +22,7 @@ export default function BillingPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 bg-emerald-600 rounded-lg flex items-center justify-center">
+            <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
               <span className="text-2xl">💊</span>
             </div>
             <div>
@@ -41,7 +41,7 @@ export default function BillingPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
                   activeTab === tab.id
-                    ? 'bg-emerald-600 text-white shadow-lg scale-105'
+                    ? 'bg-green-500 text-white shadow-lg scale-105'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-102'
                 }`}
               >

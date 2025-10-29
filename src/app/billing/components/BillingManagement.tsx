@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 
 interface BillItem {
@@ -13,6 +14,7 @@ export default function BillingManagement() {
   const [patientName, setPatientName] = useState('');
   const [billDate, setBillDate] = useState('');
   const [authorized, setAuthorized] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const addBillItem = () => {
     setBillItems([...billItems, { service: '', quantity: 1, unitPrice: 0, total: 0 }]);
@@ -44,15 +46,52 @@ export default function BillingManagement() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ 
-      patientId, 
-      patientName, 
-      billDate, 
-      authorized, 
-      items: billItems, 
-      total: calculateTotal() 
-    });
-    alert('Bill generated successfully!');
+    
+    // Validation
+    if (!patientId || !patientName || !billDate) {
+      alert('Please fill in all required patient information');
+      return;
+    }
+    
+    if (billItems.length === 0) {
+      alert('Please add at least one bill item');
+      return;
+    }
+    
+    if (!authorized) {
+      alert('Bill must be authorized by staff before generation');
+      return;
+    }
+    
+    // Generate bill data
+    const billData = {
+      billId: `BILL${Date.now().toString().slice(-6)}`,
+      patientId,
+      patientName,
+      billDate,
+      authorized,
+      items: billItems,
+      subtotal: calculateTotal(),
+      tax: calculateTotal() * 0.1, // 10% tax
+      total: calculateTotal() * 1.1,
+      generatedAt: new Date().toISOString(),
+      status: 'Generated'
+    };
+    
+    console.log('Bill Generated Successfully:', billData);
+    
+    // Show success message
+    alert(`✅ Bill Generated Successfully!\n\nBill ID: ${billData.billId}\nPatient: ${patientName}\nTotal Amount: ${billData.total.toFixed(2)}\n\nBill has been saved to the system.`);
+    
+    // Reset form after successful generation
+    const shouldReset = confirm('Do you want to create another bill?');
+    if (shouldReset) {
+      setPatientId('');
+      setPatientName('');
+      setBillDate('');
+      setBillItems([]);
+      setAuthorized(false);
+    }
   };
 
   return (
@@ -66,7 +105,7 @@ export default function BillingManagement() {
             type="text"
             value={patientId}
             onChange={(e) => setPatientId(e.target.value)}
-            className="w-full px-4 py-2.5 text-gray-900 bg-white border-2 border-gray-300 rounded-lg focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none transition-all"
+                              className="w-full px-4 py-2.5 text-gray-900 bg-white border-2 border-gray-300 rounded-lg focus:border-[#00D563] focus:ring-2 focus:ring-[#00D563]/20 outline-none transition-all"
             placeholder="Enter patient ID"
             required
           />
@@ -104,7 +143,7 @@ export default function BillingManagement() {
           <button
             type="button"
             onClick={addBillItem}
-            className="px-5 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors shadow-sm"
+            className="px-5 py-2.5 bg-[#00D563] text-white font-medium rounded-lg hover:bg-[#00C157] transition-all duration-200 shadow-md hover:shadow-lg"
           >
             + Add Item
           </button>
@@ -131,7 +170,7 @@ export default function BillingManagement() {
                     value={item.service}
                     onChange={(e) => updateBillItem(index, 'service', e.target.value)}
                     placeholder="e.g., Consultation"
-                    className="w-full px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none"
+                    className="w-full px-3 py-2 text-gray-900 bg-white border border-gray-300 rounded-md focus:border-[#00D563] focus:ring-1 focus:ring-[#00D563]/20 outline-none transition-all"
                     required
                   />
                 </div>
@@ -179,9 +218,9 @@ export default function BillingManagement() {
         )}
 
         <div className="mt-6 flex justify-end">
-          <div className="bg-emerald-50 px-6 py-3 rounded-lg border-2 border-emerald-200">
+          <div className="bg-[#00D563]/10 px-6 py-3 rounded-lg border-2 border-[#00D563]/30">
             <span className="text-sm text-gray-600 mr-2">Total Amount:</span>
-            <span className="text-2xl font-bold text-emerald-700">
+            <span className="text-2xl font-bold text-[#00D563]">
               ${calculateTotal().toFixed(2)}
             </span>
           </div>
@@ -189,23 +228,55 @@ export default function BillingManagement() {
       </div>
 
       <div className="flex items-center justify-between mt-8 pt-6 border-t-2 border-gray-200">
-        <label className="flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            checked={authorized}
-            onChange={(e) => setAuthorized(e.target.checked)}
-            className="w-5 h-5 text-emerald-600 bg-white border-gray-300 rounded focus:ring-emerald-500 focus:ring-2"
-          />
-          <span className="ml-3 text-sm font-medium text-gray-700">
-            Authorized by Staff
-          </span>
-        </label>
+        <div className="flex flex-col gap-2">
+          <label className="flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={authorized}
+              onChange={(e) => setAuthorized(e.target.checked)}
+              className="w-5 h-5 text-[#00D563] bg-white border-gray-300 rounded focus:ring-[#00D563] focus:ring-2"
+            />
+            <span className="ml-3 text-sm font-medium text-gray-700">
+              Authorized by Staff
+            </span>
+          </label>
+          {!authorized && (
+            <p className="ml-8 text-xs text-amber-600">
+              ⚠️ Authorization required to generate bill
+            </p>
+          )}
+          {billItems.length === 0 && (
+            <p className="ml-8 text-xs text-amber-600">
+              ⚠️ Add at least one bill item
+            </p>
+          )}
+        </div>
         <button
           type="submit"
-          disabled={!authorized || billItems.length === 0}
-          className="px-8 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors shadow-md"
+          disabled={!authorized || billItems.length === 0 || isSubmitting}
+          className="px-8 py-3 bg-[#00D563] text-white font-semibold rounded-lg hover:bg-[#00C157] disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2"
+          title={
+            !authorized 
+              ? 'Please authorize the bill first' 
+              : billItems.length === 0 
+                ? 'Please add at least one bill item' 
+                : 'Generate bill'
+          }
         >
-          Generate Bill
+          {isSubmitting ? (
+            <>
+              <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span>Generating Bill...</span>
+            </>
+          ) : (
+            <>
+              <span>🧾</span>
+              <span>Generate Bill</span>
+            </>
+          )}
         </button>
       </div>
     </form>
