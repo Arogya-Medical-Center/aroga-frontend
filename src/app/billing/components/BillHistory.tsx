@@ -110,7 +110,7 @@ export default function BillHistory() {
         </div>
         <div className="bg-gray-50 p-4 rounded-lg border-2 border-gray-200 shadow-sm">
           <p className="text-sm text-gray-600 font-medium">Total Amount</p>
-          <p className="text-2xl font-bold text-gray-800 mt-1">${totalAmount.toFixed(2)}</p>
+          <p className="text-2xl font-bold text-gray-800 mt-1">LKR{totalAmount.toFixed(2)}</p>
         </div>
       </div>
 
@@ -167,10 +167,10 @@ export default function BillHistory() {
                       })}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-800">
-                      ${bill.amount.toFixed(2)}
+                      LKR{bill.amount.toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold LKR{
                         bill.type === 'Insurance' 
                           ? 'bg-blue-100 text-blue-800 border border-blue-200' 
                           : 'bg-purple-100 text-purple-800 border border-purple-200'
@@ -179,7 +179,7 @@ export default function BillHistory() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full border ${getStatusColor(bill.status)}`}>
+                      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full border LKR{getStatusColor(bill.status)}`}>
                         {bill.status}
                       </span>
                     </td>

@@ -113,7 +113,7 @@ export default function ClaimBill() {
                 Claim Amount <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-2.5 text-gray-600 font-semibold">$</span>
+                <span className="absolute left-4 top-2.5 text-gray-600 font-semibold">LKR</span>
                 <input
                   type="number"
                   value={claimDetails.claimAmount}
